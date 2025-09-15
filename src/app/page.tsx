@@ -91,9 +91,9 @@ const barChartData = [
 ];
 
 const pieChartData = [
-  { name: 'Passed', value: 400, color: 'hsl(var(--primary))' },
-  { name: 'Failed', value: 30, color: 'hsl(var(--destructive))' },
-  { name: 'Pending', value: 70, color: 'hsl(var(--muted))' },
+  { name: 'Passed', value: 400, color: '#15C9ED' },
+  { name: 'Failed', value: 30, color: '#FF7038' },
+  { name: 'Pending', value: 70, color: '#FFF026' },
 ];
 
 const testRunsData = [
