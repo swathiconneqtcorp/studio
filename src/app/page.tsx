@@ -28,6 +28,9 @@ import {
   Zap,
   Search,
   Bell,
+  ChevronRight,
+  ArrowDown,
+  ArrowUp,
 } from 'lucide-react';
 import {
   Bar,
@@ -44,10 +47,38 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const kpiData = [
-  { title: 'Total User Stories', value: '128', icon: ClipboardList },
-  { title: 'Testcases Passed', value: '2,345', icon: FlaskConical },
-  { title: 'Total Apps Used', value: '4', icon: Zap },
-  { title: 'Active Tests', value: '7', icon: BarChart },
+  {
+    title: 'Total User Stories',
+    value: '128',
+    icon: ClipboardList,
+    change: '+12.5%',
+    changeType: 'increase',
+    vsLastMonth: '114',
+  },
+  {
+    title: 'Testcases Passed',
+    value: '2,345',
+    icon: FlaskConical,
+    change: '+5.2%',
+    changeType: 'increase',
+    vsLastMonth: '2,229',
+  },
+  {
+    title: 'Total Apps Used',
+    value: '4',
+    icon: Zap,
+    change: '0%',
+    changeType: 'neutral',
+    vsLastMonth: '4',
+  },
+  {
+    title: 'Active Tests',
+    value: '7',
+    icon: BarChart,
+    change: '-14.3%',
+    changeType: 'decrease',
+    vsLastMonth: '8',
+  },
 ];
 
 const barChartData = [
@@ -83,7 +114,7 @@ const GlassCard = ({
   <div
     className={cn(
       'group rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm transition-all duration-300',
-      'hover:border-transparent hover:[box-shadow:0_0_30px_0_var(--card-hover-glow)]',
+      'hover:border-transparent hover:shadow-[0_0_30px_0_var(--card-hover-glow)]',
       className
     )}
   >
@@ -132,17 +163,39 @@ export default function DashboardPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
               <GlassCard key={kpi.title}>
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">
-                        {kpi.title}
-                      </CardTitle>
-                      <div className="text-3xl font-bold">{kpi.value}</div>
-                    </div>
-                    <div className="p-3 rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
+                <CardContent className="p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="p-2 rounded-lg bg-primary/10">
                       <kpi.icon className="h-6 w-6 text-primary" />
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span>{kpi.title}</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <p className="text-3xl font-bold">{kpi.value}</p>
+                      <p
+                        className={cn(
+                          'text-xs font-semibold flex items-center',
+                          kpi.changeType === 'increase' && 'text-green-500',
+                          kpi.changeType === 'decrease' && 'text-red-500',
+                          kpi.changeType === 'neutral' && 'text-muted-foreground'
+                        )}
+                      >
+                        {kpi.changeType === 'increase' && (
+                          <ArrowUp className="h-3 w-3 mr-1" />
+                        )}
+                        {kpi.changeType === 'decrease' && (
+                          <ArrowDown className="h-3 w-3 mr-1" />
+                        )}
+                        {kpi.change}
+                      </p>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      vs last month: {kpi.vsLastMonth}
+                    </p>
                   </div>
                 </CardContent>
               </GlassCard>
