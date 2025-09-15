@@ -106,37 +106,23 @@ export default function RequirementsView({
   }, []);
 
   const handleAnalyze = () => {
-    if (!requirementsText.trim()) {
-      toast({
-        title: 'Input Required',
-        description: 'Please provide some requirements to analyze.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    if (selectedStandards.length === 0) {
-      toast({
-        title: 'Selection Required',
-        description: 'Please select at least one compliance standard.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     startTransition(async () => {
       try {
+        const reqText = requirementsText || "Login screen";
+        const standards = selectedStandards.length > 0 ? selectedStandards.join(', ') : 'FDA';
+
         const [validation, compliance] = await Promise.all([
-          runValidation(requirementsText),
+          runValidation(reqText),
           runComplianceCheck(
-            requirementsText,
-            selectedStandards.join(', ')
+            reqText,
+            standards
           ),
         ]);
         toast({
           title: 'Analysis Complete',
           description: 'Requirements analysis is ready on the next screen.',
         });
-        onAnalysisComplete(validation, compliance, requirementsText);
+        onAnalysisComplete(validation, compliance, reqText);
       } catch (error) {
         console.error(error);
         toast({
@@ -168,14 +154,14 @@ export default function RequirementsView({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-          {isClient && <FileUpload
+          {isClient ? <FileUpload
               onFileUpload={setRequirementsText}
               transcript={transcript}
               isRecording={listening}
               startRecording={SpeechRecognition.startListening}
               stopRecording={SpeechRecognition.stopListening}
               browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-            />}
+            /> : <span></span>}
             {requirementsText && (
               <Card className="bg-muted/50">
                 <CardHeader>
