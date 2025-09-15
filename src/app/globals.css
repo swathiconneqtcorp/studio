@@ -47,6 +47,10 @@
     --card-hover-bg-start: hsla(0, 0%, 100%, 0.08);
     --card-hover-bg-end: hsla(0, 0%, 100%, 0.03);
     --card-hover-glow: hsla(var(--primary), 0.2);
+
+    --mic-bg-start: 250 80% 60%;
+    --mic-bg-end: 280 80% 50%;
+    --mic-glow: 265 90% 65%;
   }
   .dark {
     --background: 0 0% 0%;
@@ -91,4 +95,21 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer utilities {
+    .pulse-ring {
+        animation: pulse-ring-animation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse-ring-animation {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.5;
+            transform: scale(1.1);
+        }
+    }
 }

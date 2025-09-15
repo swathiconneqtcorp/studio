@@ -104,11 +104,25 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
             </div>
 
             {browserSupportsSpeechRecognition && (
-                <div className="flex flex-col items-center gap-2">
-                    <Button onClick={isRecording ? stopRecording : startRecording} variant={isRecording ? 'destructive' : 'outline'} size="icon" className="rounded-full w-20 h-20">
-                        <Mic className="h-8 w-8" />
-                    </Button>
-                    <p className="text-sm text-muted-foreground">{isRecording ? 'Recording... click to stop' : 'Use your voice'}</p>
+                <div className="flex flex-col items-center gap-2 relative">
+                    <button
+                        onClick={isRecording ? stopRecording : startRecording}
+                        className={cn(
+                            "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-background",
+                            isRecording
+                            ? "bg-red-500/80 hover:bg-red-600/80 focus:ring-red-400"
+                            : "bg-gradient-to-br from-[hsl(var(--mic-bg-start))] to-[hsl(var(--mic-bg-end))] hover:from-[hsl(var(--mic-bg-start)/0.9)] hover:to-[hsl(var(--mic-bg-end)/0.9)] focus:ring-[hsl(var(--mic-glow)/0.5)]"
+                        )}
+                        >
+                        {isRecording && (
+                            <>
+                                <div className="absolute inset-0 rounded-full bg-red-500/50 pulse-ring"></div>
+                                <div className="absolute inset-0 rounded-full bg-red-500/30 pulse-ring" style={{animationDelay: '1s'}}></div>
+                            </>
+                        )}
+                        <Mic className="h-10 w-10 text-white" />
+                    </button>
+                    <p className="text-sm text-muted-foreground mt-2">{isRecording ? 'Recording... click to stop' : 'Use your voice'}</p>
                 </div>
             )}
         </div>
