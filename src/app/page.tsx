@@ -178,7 +178,7 @@ export default function DashboardPage() {
         <main className="mt-8 grid flex-1 items-start gap-8">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
-              <Card key={kpi.title}>
+              <Card key={kpi.title} className="bg-gradient-to-br from-card to-card/60">
                 <CardContent className="p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="p-2 rounded-lg bg-primary/10">
