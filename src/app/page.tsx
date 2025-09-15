@@ -115,6 +115,8 @@ const GlassCard = ({
     className={cn(
       'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm transition-all duration-300',
       'shadow-[0_0_80px_0_var(--card-glow)]',
+      'hover:bg-gradient-to-br hover:from-[var(--card-hover-bg-start)] hover:to-[var(--card-hover-bg-end)]',
+      'hover:shadow-[0_0_80px_0_var(--card-hover-glow)]',
       className
     )}
   >
@@ -175,7 +177,8 @@ export default function DashboardPage() {
         <main className="mt-8 grid flex-1 items-start gap-8">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
-              <Card key={kpi.title} className="bg-gradient-to-br from-card to-card/60 border-0">
+              <GlassCard key={kpi.title}>
+              <Card className="bg-transparent border-0 h-full">
                 <CardContent className="p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="p-2 rounded-lg bg-primary/10">
@@ -212,6 +215,7 @@ export default function DashboardPage() {
                   </div>
                 </CardContent>
               </Card>
+              </GlassCard>
             ))}
           </div>
 
