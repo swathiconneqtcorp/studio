@@ -12,9 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, AlertCircle, CheckCircle2, ListChecks, Mic, UploadCloud } from 'lucide-react';
+import { Loader2, Mic, UploadCloud } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { runValidation, runComplianceCheck } from '@/app/actions';
 import { useDropzone } from 'react-dropzone';
@@ -26,10 +24,7 @@ import type { ValidationResult, ComplianceResult } from '@/lib/types';
 type RequirementsViewProps = {
   requirementsText: string;
   setRequirementsText: (text: string) => void;
-  validationResult: ValidationResult;
-  setValidationResult: (result: ValidationResult) => void;
-  complianceResult: ComplianceResult;
-  setComplianceResult: (result: ComplianceResult) => void;
+  onAnalysisComplete: (validation: ValidationResult, compliance: ComplianceResult, requirements: string) => void;
 };
 
 const complianceOptions = [
@@ -91,10 +86,7 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
 export default function RequirementsView({
   requirementsText,
   setRequirementsText,
-  validationResult,
-  setValidationResult,
-  complianceResult,
-  setComplianceResult,
+  onAnalysisComplete,
 }: RequirementsViewProps) {
   const [isPending, startTransition] = useTransition();
   const [selectedStandards, setSelectedStandards] = useState<string[]>(['FDA']);
@@ -133,12 +125,11 @@ export default function RequirementsView({
             selectedStandards.join(', ')
           ),
         ]);
-        setValidationResult(validation);
-        setComplianceResult(compliance);
         toast({
           title: 'Analysis Complete',
-          description: 'Requirements have been successfully analyzed.',
+          description: 'Requirements analysis is ready on the next screen.',
         });
+        onAnalysisComplete(validation, compliance, requirementsText);
       } catch (error) {
         console.error(error);
         toast({
@@ -146,8 +137,6 @@ export default function RequirementsView({
           description: 'An error occurred during the analysis.',
           variant: 'destructive',
         });
-        setValidationResult(null);
-        setComplianceResult(null);
       }
     });
   };
@@ -161,8 +150,8 @@ export default function RequirementsView({
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <div className="lg:col-span-2">
+    <div className="grid gap-6 lg:grid-cols-1">
+      <div className="lg:col-span-1">
         <Card>
           <CardHeader>
             <CardTitle>Upload & Analyze Requirements</CardTitle>
@@ -205,96 +194,19 @@ export default function RequirementsView({
                 ))}
               </div>
             </div>
-            <Button onClick={handleAnalyze} disabled={isPending}>
+            <Button onClick={handleAnalyze} disabled={isPending} className="w-full">
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Analyzing...
                 </>
               ) : (
-                'Analyze Requirements'
+                'Analyze & Continue'
               )}
             </Button>
           </CardContent>
         </Card>
       </div>
-      {isPending && (
-        <div className="lg:col-span-2 flex justify-center items-center p-10">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      )}
-      {!isPending && validationResult && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ListChecks className="text-primary" />
-              Completeness Validation
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {validationResult.completenessValidation.isValid ? (
-              <Alert variant="default" className="border-green-500">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                <AlertTitle>Requirements Complete</AlertTitle>
-                <AlertDescription>
-                  The provided requirements appear to be complete.
-                </AlertDescription>
-              </Alert>
-            ) : (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Incomplete Requirements Detected</AlertTitle>
-                <AlertDescription>
-                  The following elements are suggested for inclusion:
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {!validationResult.completenessValidation.isValid &&
-              validationResult.completenessValidation.missingElements.length >
-                0 && (
-                <div className="space-y-2">
-                  {validationResult.completenessValidation.missingElements.map(
-                    (item, index) => (
-                      <Card key={index} className="bg-muted/50">
-                        <CardHeader className="p-4">
-                          <CardTitle className="text-base">
-                            {item.element}
-                          </CardTitle>
-                          <CardDescription>{item.reason}</CardDescription>
-                        </CardHeader>
-                      </Card>
-                    )
-                  )}
-                </div>
-              )}
-          </CardContent>
-        </Card>
-      )}
-      {!isPending && complianceResult && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ListChecks className="text-primary" />
-              Compliance Report
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-1">
-              <h3 className="font-semibold">Compliance Status</h3>
-              <p className="text-sm text-muted-foreground">
-                {complianceResult.complianceReport}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-semibold">Suggestions for Improvement</h3>
-              <p className="text-sm text-muted-foreground">
-                {complianceResult.suggestions}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
