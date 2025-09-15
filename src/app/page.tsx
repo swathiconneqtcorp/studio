@@ -175,7 +175,7 @@ export default function DashboardPage() {
         <main className="mt-8 grid flex-1 items-start gap-8">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
-              <Card key={kpi.title} className="bg-gradient-to-br from-card to-card/60">
+              <Card key={kpi.title} className="bg-gradient-to-br from-card to-card/60 border-0">
                 <CardContent className="p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="p-2 rounded-lg bg-primary/10">
@@ -316,9 +316,11 @@ export default function DashboardPage() {
                       <TableCell>{run.app}</TableCell>
                       <TableCell>
                         <Badge
+                          style={{
+                            backgroundColor: run.status === 'Passed' ? '#8BEA70' : run.status === 'Failed' ? '#B72B49' : undefined,
+                            color: run.status === 'Passed' ? 'black' : 'white',
+                          }}
                           className={cn({
-                            'bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30': run.status === 'Passed',
-                            'bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30': run.status === 'Failed',
                             'bg-secondary text-secondary-foreground hover:bg-secondary/80': run.status === 'Running'
                           })}
                         >
@@ -339,5 +341,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
