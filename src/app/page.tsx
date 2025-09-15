@@ -20,7 +20,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  FileText,
   LayoutGrid,
   PlusCircle,
   BarChart,
@@ -40,10 +39,7 @@ import {
   Pie,
   PieChart,
   Cell,
-  Line,
-  LineChart,
 } from 'recharts';
-import Header from '@/components/header';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -87,11 +83,17 @@ const GlassCard = ({
   <div
     className={cn(
       'group rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm transition-all duration-300',
+      'hover:border-transparent hover:[box-shadow:0_0_30px_0_var(--card-hover-glow)]',
       className
     )}
   >
-    <div className="relative h-full w-full rounded-xl transition-all duration-300 group-hover:border-transparent group-hover:[box-shadow:0_0_0_1px_hsl(var(--primary))]">
-        {children}
+    <div
+      className={cn(
+        'h-full w-full rounded-xl transition-all duration-300',
+        'group-hover:bg-gradient-to-br group-hover:from-[var(--card-hover-bg-start)] group-hover:to-[var(--card-hover-bg-end)]'
+      )}
+    >
+      {children}
     </div>
   </div>
 );
@@ -117,7 +119,7 @@ export default function DashboardPage() {
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
-             <Link href="/requirements" passHref>
+            <Link href="/requirements" passHref>
               <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 New Testcase Journey
@@ -130,15 +132,15 @@ export default function DashboardPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
               <GlassCard key={kpi.title}>
-                 <CardContent className="p-6">
+                <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
-                       <CardTitle className="text-sm font-medium text-muted-foreground">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">
                         {kpi.title}
                       </CardTitle>
                       <div className="text-3xl font-bold">{kpi.value}</div>
                     </div>
-                    <div className="p-3 rounded-full bg-primary/10">
+                    <div className="p-3 rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
                       <kpi.icon className="h-6 w-6 text-primary" />
                     </div>
                   </div>
