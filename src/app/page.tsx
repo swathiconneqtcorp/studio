@@ -316,16 +316,11 @@ export default function DashboardPage() {
                       <TableCell>{run.app}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={
-                            run.status === 'Passed'
-                              ? 'default'
-                              : run.status === 'Failed'
-                              ? 'destructive'
-                              : 'secondary'
-                          }
-                          className={
-                            run.status === 'Passed' ? 'bg-green-600/70' : ''
-                          }
+                          className={cn({
+                            'bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30': run.status === 'Passed',
+                            'bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30': run.status === 'Failed',
+                            'bg-secondary text-secondary-foreground hover:bg-secondary/80': run.status === 'Running'
+                          })}
                         >
                           {run.status}
                         </Badge>
@@ -344,3 +339,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
