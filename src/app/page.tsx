@@ -150,10 +150,7 @@ export default function DashboardPage() {
     <div className="flex min-h-screen w-full flex-col bg-background">
       <div className="flex-1 p-4 sm:p-6 lg:p-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <LayoutGrid className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-          </div>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
