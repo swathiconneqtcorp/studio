@@ -34,7 +34,7 @@ export default function RequirementsPage() {
 
   return (
     <>
-      <Header title="Requirements Analysis" />
+      <Header title="Import Requirement" />
       <main className="flex-1 p-4 lg:p-6">
         <RequirementsView
           requirementsText={requirementsText}
