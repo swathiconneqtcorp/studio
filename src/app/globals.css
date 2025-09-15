@@ -43,9 +43,9 @@
     --card-border: hsla(0, 0%, 100%, 0.1);
     --card-glow: hsla(var(--primary), 0);
 
-    --card-hover-bg-start: hsla(var(--primary), 0.15);
+    --card-hover-bg-start: hsla(var(--primary), 0.25);
     --card-hover-bg-end: hsla(var(--primary), 0.05);
-    --card-hover-glow: hsla(var(--primary), 0.3);
+    --card-hover-glow: hsla(var(--primary), 0.4);
   }
   .dark {
     --background: 0 0% 0%;
