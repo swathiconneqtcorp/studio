@@ -1,7 +1,7 @@
 
 'use client';
 import 'regenerator-runtime/runtime'
-import React, { useState, useTransition, useCallback } from 'react';
+import React, { useState, useTransition, useCallback, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -34,7 +34,11 @@ const complianceOptions = [
   { id: 'HIPAA', label: 'HIPAA' },
 ];
 
-function FileUpload({ onFileUpload, transcript, isRecording, startRecording, stopRecording, browserSupportsSpeechRecognition }: any) {
+function FileUpload({ onFileUpload, transcript, isRecording, startRecording, stopRecording }: any) {
+    const {
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+
     const onDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
         const reader = new FileReader();
@@ -53,10 +57,6 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
         }
     }, [transcript, onFileUpload])
 
-    if (!browserSupportsSpeechRecognition) {
-        return <span>Browser doesn't support speech recognition.</span>;
-    }
-
     return (
         <div className="flex flex-col gap-4">
         <div
@@ -74,11 +74,13 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
           </p>
           <p className="text-xs text-muted-foreground mt-1">TXT, PDF, DOC, DOCX</p>
         </div>
-        <div className="flex items-center justify-center">
-            <Button onClick={isRecording ? stopRecording : startRecording} variant={isRecording ? 'destructive' : 'outline'} size="icon" className="rounded-full w-16 h-16">
-                <Mic className="h-6 w-6" />
-            </Button>
-        </div>
+        {browserSupportsSpeechRecognition && (
+            <div className="flex items-center justify-center">
+                <Button onClick={isRecording ? stopRecording : startRecording} variant={isRecording ? 'destructive' : 'outline'} size="icon" className="rounded-full w-16 h-16">
+                    <Mic className="h-6 w-6" />
+                </Button>
+            </div>
+        )}
         </div>
       );
 }
@@ -90,6 +92,7 @@ export default function RequirementsView({
 }: RequirementsViewProps) {
   const [isPending, startTransition] = useTransition();
   const [selectedStandards, setSelectedStandards] = useState<string[]>(['FDA']);
+  const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
     const {
         transcript,
@@ -97,6 +100,10 @@ export default function RequirementsView({
         resetTranscript,
         browserSupportsSpeechRecognition
       } = useSpeechRecognition();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleAnalyze = () => {
     if (!requirementsText.trim()) {
@@ -161,14 +168,14 @@ export default function RequirementsView({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-          <FileUpload
+          {isClient && <FileUpload
               onFileUpload={setRequirementsText}
               transcript={transcript}
               isRecording={listening}
               startRecording={SpeechRecognition.startListening}
               stopRecording={SpeechRecognition.stopListening}
               browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-            />
+            />}
             {requirementsText && (
               <Card className="bg-muted/50">
                 <CardHeader>
