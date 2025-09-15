@@ -27,6 +27,8 @@ import {
   ClipboardList,
   FlaskConical,
   Zap,
+  Search,
+  Bell,
 } from 'lucide-react';
 import {
   Bar,
@@ -38,9 +40,12 @@ import {
   Pie,
   PieChart,
   Cell,
+  Line,
+  LineChart,
 } from 'recharts';
 import Header from '@/components/header';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const kpiData = [
   { title: 'Total User Stories', value: '128', icon: ClipboardList },
@@ -72,27 +77,64 @@ const testRunsData = [
   { id: 'TR-005', app: 'Pharmacy Management', status: 'Running', progress: 40 },
 ];
 
+const GlassCard = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div
+    className={cn(
+      'rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm',
+      className
+    )}
+  >
+    {children}
+  </div>
+);
+
 export default function DashboardPage() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className="flex flex-col sm:gap-4 sm:py-4">
-        <Header title="Dashboard" />
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">
-              Welcome Back!
-            </h1>
-            <Link href="/requirements" passHref>
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="secondary"
+              className="bg-primary/10 text-primary hover:bg-primary/20"
+            >
+              <LayoutGrid className="mr-2 h-4 w-4" />
+              Dashboard
+            </Button>
+            <Button variant="ghost">Financials</Button>
+            <Button variant="ghost">KPIs</Button>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Search..."
+                className="w-full rounded-lg bg-black/30 border border-border/50 pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+            </Button>
+             <Link href="/requirements" passHref>
               <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 New Testcase Journey
               </Button>
             </Link>
           </div>
+        </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <main className="mt-8 grid flex-1 items-start gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
-              <Card key={kpi.title}>
+              <GlassCard key={kpi.title}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     {kpi.title}
@@ -102,20 +144,20 @@ export default function DashboardPage() {
                 <CardContent>
                   <div className="text-2xl font-bold">{kpi.value}</div>
                 </CardContent>
-              </Card>
+              </GlassCard>
             ))}
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="lg:col-span-4">
-              <CardHeader>
-                <CardTitle>Test Coverage Overview</CardTitle>
-                <CardDescription>
-                  A monthly overview of test cases generated.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <ResponsiveContainer width="100%" height={300}>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
+            <GlassCard className="lg:col-span-4 p-4 sm:p-6">
+              <h3 className="text-lg font-semibold">
+                Test Coverage Overview
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                A monthly overview of test cases generated.
+              </p>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
                   <RechartsBarChart data={barChartData}>
                     <XAxis
                       dataKey="name"
@@ -132,10 +174,11 @@ export default function DashboardPage() {
                       tickFormatter={(value) => `${value}`}
                     />
                     <Tooltip
-                      cursor={{ fill: 'hsla(var(--muted))' }}
+                      cursor={{ fill: 'hsla(var(--primary), 0.1)' }}
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--background))',
+                        backgroundColor: 'rgba(5, 5, 5, 0.8)',
                         borderColor: 'hsl(var(--border))',
+                        borderRadius: '0.5rem',
                       }}
                     />
                     <Bar
@@ -145,18 +188,18 @@ export default function DashboardPage() {
                     />
                   </RechartsBarChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </GlassCard>
 
-            <Card className="lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Test Status Distribution</CardTitle>
-                <CardDescription>
-                  Current distribution of test case statuses.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+            <GlassCard className="lg:col-span-3 p-4 sm:p-6">
+              <h3 className="text-lg font-semibold">
+                Test Status Distribution
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Current distribution of test case statuses.
+              </p>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={pieChartData}
@@ -173,27 +216,26 @@ export default function DashboardPage() {
                     </Pie>
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--background))',
+                        backgroundColor: 'rgba(5, 5, 5, 0.8)',
                         borderColor: 'hsl(var(--border))',
+                        borderRadius: '0.5rem',
                       }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </GlassCard>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Test Runs</CardTitle>
-              <CardDescription>
-                An overview of your recent test case executions.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <GlassCard className="p-4 sm:p-6">
+            <h3 className="text-lg font-semibold">Recent Test Runs</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              An overview of your recent test case executions.
+            </p>
+            <div>
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="border-b-white/10">
                     <TableHead>Test ID</TableHead>
                     <TableHead>Application</TableHead>
                     <TableHead>Status</TableHead>
@@ -202,7 +244,7 @@ export default function DashboardPage() {
                 </TableHeader>
                 <TableBody>
                   {testRunsData.map((run) => (
-                    <TableRow key={run.id}>
+                    <TableRow key={run.id} className="border-b-0">
                       <TableCell className="font-medium">{run.id}</TableCell>
                       <TableCell>{run.app}</TableCell>
                       <TableCell>
@@ -214,7 +256,9 @@ export default function DashboardPage() {
                               ? 'destructive'
                               : 'secondary'
                           }
-                          className={run.status === 'Passed' ? 'bg-green-600' : ''}
+                          className={
+                            run.status === 'Passed' ? 'bg-green-600/70' : ''
+                          }
                         >
                           {run.status}
                         </Badge>
@@ -226,12 +270,10 @@ export default function DashboardPage() {
                   ))}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </GlassCard>
         </main>
       </div>
     </div>
   );
 }
-
-    

@@ -37,6 +37,11 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 48 96% 59%;
+
+    --card-bg-start: hsla(0, 0%, 100%, 0.05);
+    --card-bg-end: hsla(0, 0%, 100%, 0.02);
+    --card-border: hsla(0, 0%, 100%, 0.1);
+    --card-glow: hsla(var(--primary), 0.2);
   }
   .dark {
     --background: 0 0% 0%;
@@ -82,5 +87,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-    
