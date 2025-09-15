@@ -60,21 +60,27 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
 
     return (
         <div className="flex flex-col items-center gap-6">
-            <div
+             <div
                 {...getRootProps()}
                 className={cn(
-                    'flex w-full flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg cursor-pointer transition-colors',
-                    isDragActive ? 'border-primary bg-primary/10' : 'border-input hover:bg-muted/50'
+                    'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
+                    'bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm shadow-[0_0_80px_0_var(--card-glow)]',
+                    'hover:bg-gradient-to-br hover:from-[var(--card-hover-bg-start)] hover:to-[var(--card-hover-bg-end)] hover:shadow-[0_0_80px_0_var(--card-hover-glow)]',
+                     isDragActive ? 'border-primary' : 'border-border/50'
                 )}
             >
-                <input {...getInputProps()} />
-                <UploadCloud className="w-12 h-12 text-primary" />
-                <p className="mt-4 text-center text-foreground">
-                    {isDragActive
-                        ? 'Drop the files here ...'
-                        : "Drag 'n' drop a requirements file here, or click to select"}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">TXT, PDF, DOC, DOCX</p>
+                <div className='h-full w-full rounded-xl'>
+                    <input {...getInputProps()} />
+                    <div className='flex flex-col items-center justify-center'>
+                        <UploadCloud className="w-12 h-12 text-primary" />
+                        <p className="mt-4 text-center text-foreground">
+                            {isDragActive
+                                ? 'Drop the files here ...'
+                                : "Drag 'n' drop a requirements file here, or click to select"}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">TXT, PDF, DOC, DOCX</p>
+                    </div>
+                </div>
             </div>
             
             <div className="flex items-center w-full">
