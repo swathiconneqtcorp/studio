@@ -1,5 +1,6 @@
-'use client';
 
+'use client';
+import 'regenerator-runtime/runtime'
 import React, { useState, useTransition, useCallback } from 'react';
 import {
   Card,
