@@ -114,7 +114,8 @@ const GlassCard = ({
   <div
     className={cn(
       'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm transition-all duration-300',
-      'shadow-[0_0_40px_0_rgba(250,211,51,0.12)]',
+      'shadow-[0_0_0_1px_var(--card-border),0_0_80px_0_var(--card-glow)]',
+      'hover:shadow-[0_0_0_1px_var(--card-border),0_0_120px_0_var(--card-hover-glow)]',
       className
     )}
   >
@@ -347,5 +348,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

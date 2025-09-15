@@ -38,14 +38,14 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 48 96% 59%;
 
-    --card-bg-start: #D9D9D9;
-    --card-bg-end: #D9D9D9;
+    --card-bg-start: hsla(0, 0%, 100%, 0.05);
+    --card-bg-end: hsla(0, 0%, 100%, 0);
     --card-border: hsla(0, 0%, 100%, 0.1);
-    --card-glow: hsla(var(--primary), 0);
+    --card-glow: hsla(var(--primary), 0.1);
 
-    --card-hover-bg-start: #D9D9D9;
-    --card-hover-bg-end: #D9D9D9;
-    --card-hover-glow: hsla(var(--primary), 0);
+    --card-hover-bg-start: hsla(0, 0%, 100%, 0.08);
+    --card-hover-bg-end: hsla(0, 0%, 100%, 0.03);
+    --card-hover-glow: hsla(var(--primary), 0.2);
   }
   .dark {
     --background: 0 0% 0%;
@@ -91,5 +91,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-    
