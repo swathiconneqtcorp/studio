@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  transpilePackages: ['react-speech-recognition'],
 };
 
 export default nextConfig;
