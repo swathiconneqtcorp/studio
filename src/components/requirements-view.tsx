@@ -79,8 +79,8 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                 {...getRootProps()}
                 className={cn(
                     'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
-                    'bg-gradient-to-br from-card/50 to-card/20 backdrop-blur-sm border-2 border-dashed',
-                     isDragActive ? 'border-primary bg-primary/10' : 'border-border/30'
+                    'bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border border-border/30',
+                     isDragActive ? 'border-primary bg-primary/10' : ''
                 )}
             >
                 <div className='h-full w-full rounded-xl'>
