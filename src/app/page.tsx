@@ -99,14 +99,9 @@ export default function DashboardPage() {
     <div className="flex min-h-screen w-full flex-col bg-background">
       <div className="flex-1 p-4 sm:p-6 lg:p-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="secondary"
-              className="bg-primary/10 text-primary hover:bg-primary/20"
-            >
-              <LayoutGrid className="mr-2 h-4 w-4" />
-              Dashboard
-            </Button>
+          <div className="flex items-center gap-2">
+            <LayoutGrid className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold">Dashboard</h1>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative">
