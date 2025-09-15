@@ -109,11 +109,11 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                     <button
                         onClick={isRecording ? stopRecording : startRecording}
                         className={cn(
-                            "relative flex items-center justify-center w-48 h-48 rounded-full transition-all duration-300 focus:outline-none"
+                            "relative flex items-center justify-center w-32 h-32 rounded-full transition-all duration-300 focus:outline-none"
                         )}
                         >
                         <BlobbyCanvas isRecording={isRecording} />
-                        <Mic className="h-10 w-10 text-white absolute pointer-events-none" />
+                        <Mic className="h-8 w-8 text-white absolute pointer-events-none" />
                     </button>
                     <p className="text-sm text-muted-foreground mt-2">{isRecording ? 'Recording... click to stop' : 'Use your voice'}</p>
                 </div>

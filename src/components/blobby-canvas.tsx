@@ -111,7 +111,7 @@ const BlobbyCanvas: React.FC<BlobbyCanvasProps> = ({ isRecording }) => {
 
     let width = (canvas.width = canvas.offsetWidth);
     let height = (canvas.height = canvas.offsetHeight);
-    const k = width / 2.5;
+    const k = width / 4; // Make it smaller
 
     if (points.current.length === 0) {
       const numPoints = 2500;
@@ -156,9 +156,9 @@ const BlobbyCanvas: React.FC<BlobbyCanvasProps> = ({ isRecording }) => {
         
         const alpha = Math.min(1, Math.max(0.1, distance/2));
 
-        const purpleShade = 150 + Math.floor((newZ + 1) * 50);
+        const yellowShade = 150 + Math.floor((newZ + 1) * 50);
 
-        ctx.fillStyle = `rgba(${purpleShade}, 100, 255, ${alpha})`;
+        ctx.fillStyle = `rgba(255, ${yellowShade}, 0, ${alpha})`;
         ctx.beginPath();
         ctx.arc(projX, projY, distance * 1.5, 0, 2 * Math.PI);
         ctx.fill();
