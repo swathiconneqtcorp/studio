@@ -22,7 +22,6 @@ import { cn } from '@/lib/utils';
 
 import type { ValidationResult, ComplianceResult } from '@/lib/types';
 import FileUploadProgress from './file-upload-progress';
-import BlobbyCanvas from './blobby-canvas';
 
 type RequirementsViewProps = {
   requirementsText: string;
@@ -105,15 +104,16 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
             </div>
 
             {browserSupportsSpeechRecognition && (
-                <div className="flex flex-col items-center gap-2 relative">
+                <div className="flex flex-col items-center gap-2">
                     <button
                         onClick={isRecording ? stopRecording : startRecording}
                         className={cn(
-                            "relative flex items-center justify-center w-32 h-32 rounded-full transition-all duration-300 focus:outline-none"
+                            "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
+                            "bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg"
                         )}
                         >
-                        <BlobbyCanvas isRecording={isRecording} />
-                        <Mic className="h-8 w-8 text-white absolute pointer-events-none" />
+                        {isRecording && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-purple-400 pulse-ring"></div>}
+                        <Mic className="h-8 w-8 text-white" />
                     </button>
                     <p className="text-sm text-muted-foreground mt-2">{isRecording ? 'Recording... click to stop' : 'Use your voice'}</p>
                 </div>
