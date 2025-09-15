@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +7,7 @@
   :root {
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 48 30% 25%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
@@ -41,7 +42,7 @@
     --card-bg-start: hsla(0, 0%, 100%, 0.05);
     --card-bg-end: hsla(0, 0%, 100%, 0);
     --card-border: hsla(0, 0%, 100%, 0.1);
-    --card-glow: hsla(var(--primary), 0.1);
+    --card-glow: hsla(var(--primary), 0);
 
     --card-hover-bg-start: hsla(0, 0%, 100%, 0.08);
     --card-hover-bg-end: hsla(0, 0%, 100%, 0.03);
@@ -50,7 +51,7 @@
   .dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 48 30% 25%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;

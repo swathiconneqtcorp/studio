@@ -114,8 +114,7 @@ const GlassCard = ({
   <div
     className={cn(
       'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm transition-all duration-300',
-      'shadow-[0_0_0_1px_var(--card-border),0_0_80px_0_var(--card-glow)]',
-      
+      'shadow-[0_0_80px_0_var(--card-glow)]',
       className
     )}
   >
@@ -179,7 +178,7 @@ export default function DashboardPage() {
         <main className="mt-8 grid flex-1 items-start gap-8">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
-              <GlassCard key={kpi.title}>
+              <Card key={kpi.title}>
                 <CardContent className="p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="p-2 rounded-lg bg-primary/10">
@@ -215,7 +214,7 @@ export default function DashboardPage() {
                     </p>
                   </div>
                 </CardContent>
-              </GlassCard>
+              </Card>
             ))}
           </div>
 
