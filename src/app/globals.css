@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -39,7 +39,7 @@
     --sidebar-ring: 48 96% 59%;
   }
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -82,3 +82,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+    
