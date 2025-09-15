@@ -14,7 +14,7 @@ import {
   SidebarProvider,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons';
-import { FileText, LayoutGrid } from 'lucide-react';
+import { FileText, LayoutGrid, TestTube } from 'lucide-react';
 import Link from 'next/link';
 
 const sidebarNavItems = [
@@ -33,7 +33,7 @@ const sidebarNavItems = [
   {
     id: 'scenarios',
     label: 'Scenarios',
-    icon: LayoutGrid,
+    icon: TestTube,
     href: '/scenarios',
   },
 ];
@@ -72,5 +72,3 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
