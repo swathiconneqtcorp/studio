@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -82,12 +82,12 @@ const kpiData = [
 ];
 
 const barChartData = [
-  { name: 'Jan', total: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Feb', total: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Mar', total: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Apr', total: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'May', total: Math.floor(Math.random() * 2000) + 500 },
-  { name: 'Jun', total: Math.floor(Math.random() * 2000) + 500 },
+  { name: 'Jan', total: 0 },
+  { name: 'Feb', total: 0 },
+  { name: 'Mar', total: 0 },
+  { name: 'Apr', total: 0 },
+  { name: 'May', total: 0 },
+  { name: 'Jun', total: 0 },
 ];
 
 const pieChartData = [
@@ -113,8 +113,8 @@ const GlassCard = ({
 }) => (
   <div
     className={cn(
-      'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm transition-all duration-300',
-      'hover:shadow-[0_0_30px_0_var(--card-hover-glow)]',
+      'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm transition-all duration-300',
+      'shadow-[0_0_40px_0_rgba(250,211,51,0.12)]',
       className
     )}
   >
@@ -130,6 +130,22 @@ const GlassCard = ({
 );
 
 export default function DashboardPage() {
+  const [isClient, setIsClient] = useState(false);
+  const [hydratedBarChartData, setHydratedBarChartData] = useState(barChartData);
+
+  useEffect(() => {
+    setIsClient(true);
+    setHydratedBarChartData(
+      barChartData.map((item) => ({
+        ...item,
+        total: Math.floor(Math.random() * 2000) + 500,
+      }))
+    );
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <div className="flex-1 p-4 sm:p-6 lg:p-8">
@@ -212,7 +228,7 @@ export default function DashboardPage() {
               </p>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RechartsBarChart data={barChartData}>
+                  <RechartsBarChart data={hydratedBarChartData}>
                     <XAxis
                       dataKey="name"
                       stroke="#888888"
@@ -331,3 +347,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
