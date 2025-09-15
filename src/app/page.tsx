@@ -86,7 +86,7 @@ const GlassCard = ({
 }) => (
   <div
     className={cn(
-      'rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm',
+      'rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_0_30px_0_var(--card-glow)] hover:scale-105',
       className
     )}
   >
@@ -135,14 +135,18 @@ export default function DashboardPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
               <GlassCard key={kpi.title}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {kpi.title}
-                  </CardTitle>
-                  <kpi.icon className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{kpi.value}</div>
+                 <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                       <CardTitle className="text-sm font-medium text-muted-foreground">
+                        {kpi.title}
+                      </CardTitle>
+                      <div className="text-3xl font-bold">{kpi.value}</div>
+                    </div>
+                    <div className="p-3 rounded-full bg-primary/10">
+                      <kpi.icon className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
                 </CardContent>
               </GlassCard>
             ))}
