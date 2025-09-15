@@ -86,7 +86,7 @@ const GlassCard = ({
 }) => (
   <div
     className={cn(
-      'rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_0_30px_0_var(--card-glow)] hover:scale-105',
+      'rounded-xl border border-[var(--card-border)] bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] shadow-[0_0_20px_0_var(--card-glow)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_0_30px_0_var(--card-glow)]',
       className
     )}
   >
@@ -107,8 +107,6 @@ export default function DashboardPage() {
               <LayoutGrid className="mr-2 h-4 w-4" />
               Dashboard
             </Button>
-            <Button variant="ghost">Financials</Button>
-            <Button variant="ghost">KPIs</Button>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative">
