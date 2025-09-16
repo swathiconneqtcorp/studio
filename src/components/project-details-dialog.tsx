@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -172,7 +173,7 @@ export default function ProjectDetailsDialog({
           </div>
         )}
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose} className="text-black border-gray-300 hover:bg-gray-100">Cancel</Button>
+          <Button type="button" variant="ghost" onClick={onClose} className="text-black hover:bg-gray-100">Cancel</Button>
           <Button type="submit" onClick={handleSubmit} disabled={isLoading}>Confirm & Analyze</Button>
         </DialogFooter>
       </DialogContent>
