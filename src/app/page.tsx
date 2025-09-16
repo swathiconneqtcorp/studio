@@ -31,6 +31,7 @@ import {
   ChevronRight,
   ArrowDown,
   ArrowUp,
+  Bug,
 } from 'lucide-react';
 import {
   Bar,
@@ -115,10 +116,12 @@ const barChartData = [
   },
 ];
 
-const pieChartData = [
-  { name: 'Passed', value: 400, color: '#15C9ED' },
-  { name: 'Failed', value: 30, color: '#FF7038' },
-  { name: 'Pending', value: 70, color: '#FFF026' },
+const defectData = [
+  { name: 'New', count: 25, fill: '#3b82f6' },
+  { name: 'Open', count: 40, fill: '#f97316' },
+  { name: 'In Progress', count: 15, fill: '#a855f7' },
+  { name: 'Retest', count: 30, fill: '#eab308' },
+  { name: 'Closed', count: 150, fill: '#22c55e' },
 ];
 
 const testRunsData = [
@@ -317,35 +320,41 @@ export default function DashboardPage() {
 
             <GlassCard className="lg:col-span-3 p-4 sm:p-6">
               <h3 className="text-lg font-semibold">
-                Test Status Distribution
+                Defect Management Metrics
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Current distribution of test case statuses.
+                Number of bugs based on their current status.
               </p>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieChartData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {pieChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: 'rgba(5, 5, 5, 0.8)',
-                        borderColor: 'hsl(var(--border))',
-                        borderRadius: '0.5rem',
-                      }}
+                  <RechartsBarChart data={defectData}>
+                    <XAxis
+                      dataKey="name"
+                      stroke="#888888"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
                     />
-                  </PieChart>
+                    <YAxis
+                      stroke="#888888"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <Tooltip
+                       cursor={{ fill: 'hsla(var(--primary), 0.1)' }}
+                       contentStyle={{
+                         backgroundColor: 'rgba(5, 5, 5, 0.8)',
+                         borderColor: 'hsl(var(--border))',
+                         borderRadius: '0.5rem',
+                       }}
+                    />
+                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                      {defectData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </RechartsBarChart>
                 </ResponsiveContainer>
               </div>
             </GlassCard>
