@@ -76,14 +76,6 @@ const kpiData = [
     changeType: 'increase',
     vsLastMonth: '2,229',
   },
-    {
-    title: 'Total Projects',
-    value: '8',
-    icon: FolderKanban,
-    change: '+1',
-    changeType: 'increase',
-    vsLastMonth: '7',
-  },
   {
     title: 'Total Apps Used',
     value: '4',
@@ -239,7 +231,7 @@ export default function DashboardPage() {
         </div>
 
         <main className="mt-8 grid flex-1 items-start gap-8">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
               <GlassCard key={kpi.title}>
               <Card className="bg-transparent border-0 h-full">
