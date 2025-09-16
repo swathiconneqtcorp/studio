@@ -79,7 +79,7 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                 {...getRootProps()}
                 className={cn(
                     'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
-                    'bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border border-border/30',
+                    'bg-card/50 border border-border/30',
                      isDragActive ? 'border-primary bg-primary/10' : ''
                 )}
             >
@@ -109,7 +109,7 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                         onClick={isRecording ? stopRecording : startRecording}
                         className={cn(
                             "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                            "bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg"
+                            "bg-gradient-to-br from-[hsl(var(--mic-bg-start))] to-[hsl(var(--mic-bg-end))] shadow-[0_0_40px_-10px_hsl(var(--mic-glow))]"
                         )}
                         >
                         {isRecording && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-purple-400 pulse-ring"></div>}
@@ -216,68 +216,64 @@ export default function RequirementsView({
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-1">
-      <div className="lg:col-span-1">
-        <Card>
-          <CardHeader>
-            <CardTitle>Import Requirement</CardTitle>
-            <CardDescription>
-              Upload your software requirements document or use your voice. Our AI
-              will analyze it for completeness and compliance.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-          {isClient ? <FileUpload
-              onFileUpload={setRequirementsText}
-              transcript={transcript}
-              isRecording={listening}
-              startRecording={() => SpeechRecognition.startListening({ continuous: true })}
-              stopRecording={SpeechRecognition.stopListening}
-              browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-              onFileSelect={handleFileSelect}
-              isUploading={isUploading}
-              uploadProgress={uploadProgress}
-              file={uploadedFile}
-              onCancelUpload={handleCancelUpload}
-            /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
-            
-            {requirementsText && !isUploading && (
-              <Card className="bg-muted/50">
-                <CardHeader>
-                  <CardTitle className="text-base">Loaded Requirements</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{requirementsText.substring(0, 500)}{requirementsText.length > 500 && '...'}</p>
-                </CardContent>
-              </Card>
-            )}
-            <div className="space-y-4">
-              <Label>Select Compliance Standards</Label>
-              <div className="flex flex-wrap gap-4">
-                {complianceOptions.map((option) => (
-                  <div key={option.id} className="flex items-center gap-2">
-                    <Checkbox
-                      id={option.id}
-                      checked={selectedStandards.includes(option.id)}
-                      onCheckedChange={() => handleStandardChange(option.id)}
-                    />
-                    <Label htmlFor={option.id}>{option.label}</Label>
-                  </div>
-                ))}
+    <div className="space-y-6">
+      <div className="flex flex-col space-y-1.5">
+          <h1 className="text-2xl font-semibold leading-none tracking-tight">Import Requirement</h1>
+          <p className="text-sm text-muted-foreground">
+            Upload your software requirements document or use your voice. Our AI
+            will analyze it for completeness and compliance.
+          </p>
+      </div>
+      <div className="space-y-6">
+      {isClient ? <FileUpload
+          onFileUpload={setRequirementsText}
+          transcript={transcript}
+          isRecording={listening}
+          startRecording={() => SpeechRecognition.startListening({ continuous: true })}
+          stopRecording={SpeechRecognition.stopListening}
+          browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
+          onFileSelect={handleFileSelect}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress}
+          file={uploadedFile}
+          onCancelUpload={handleCancelUpload}
+        /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
+        
+        {requirementsText && !isUploading && (
+          <Card className="bg-muted/50">
+            <CardHeader>
+              <CardTitle className="text-base">Loaded Requirements</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{requirementsText.substring(0, 500)}{requirementsText.length > 500 && '...'}</p>
+            </CardContent>
+          </Card>
+        )}
+        <div className="space-y-4">
+          <Label>Select Compliance Standards</Label>
+          <div className="flex flex-wrap gap-4">
+            {complianceOptions.map((option) => (
+              <div key={option.id} className="flex items-center gap-2">
+                <Checkbox
+                  id={option.id}
+                  checked={selectedStandards.includes(option.id)}
+                  onCheckedChange={() => handleStandardChange(option.id)}
+                />
+                <Label htmlFor={option.id}>{option.label}</Label>
               </div>
-            </div>
-            <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || isUploading} className="w-full">
-              {isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                'Analyze & Continue'
-              )}
-            </Button>
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+        </div>
+        <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || isUploading} className="w-full">
+          {isPending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Analyzing...
+            </>
+          ) : (
+            'Analyze & Continue'
+          )}
+        </Button>
       </div>
     </div>
   );
