@@ -393,7 +393,7 @@ export default function RequirementsView({
                                 onClick={startRecording}
                                 className={cn(
                                     "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                                    "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                                    "bg-gradient-to-br from-blue-400 to-purple-500 shadow-[0_0_40px_-10px_#60a5fa]"
                                 )}
                                 >
                                 <Mic className="h-10 w-10 text-primary-foreground" />
@@ -408,9 +408,11 @@ export default function RequirementsView({
         ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
           
           {uploadedFiles.length > 0 && (
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
               {uploadedFiles.map((uploadedFile, index) => (
-                <FileProgress key={index} file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
+                <div key={index} className="md:col-span-3">
+                    <FileProgress file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
+                </div>
               ))}
             </div>
           )}
@@ -438,3 +440,5 @@ export default function RequirementsView({
     </div>
   );
 }
+
+    
