@@ -313,7 +313,7 @@ export default function RequirementsView({
           )}
         </div>
       </div>
-      <div className="pb-5">
+      <div className="p-5">
         <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || !allFilesUploaded} className="w-full">
             {isPending ? (
               <>
