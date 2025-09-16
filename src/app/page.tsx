@@ -42,6 +42,7 @@ import {
   Pie,
   PieChart,
   Cell,
+  Legend,
 } from 'recharts';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -82,12 +83,36 @@ const kpiData = [
 ];
 
 const barChartData = [
-  { name: 'Jan', total: 0 },
-  { name: 'Feb', total: 0 },
-  { name: 'Mar', total: 0 },
-  { name: 'Apr', total: 0 },
-  { name: 'May', total: 0 },
-  { name: 'Jun', total: 0 },
+  {
+    name: 'Jan',
+    'Clinical Trial App': { passed: 40, failed: 5, pending: 10 },
+    'Patient Portal': { passed: 30, failed: 3, pending: 8 },
+  },
+  {
+    name: 'Feb',
+    'Clinical Trial App': { passed: 45, failed: 8, pending: 12 },
+    'Patient Portal': { passed: 35, failed: 5, pending: 10 },
+  },
+  {
+    name: 'Mar',
+    'Clinical Trial App': { passed: 50, failed: 10, pending: 15 },
+    'Patient Portal': { passed: 40, failed: 7, pending: 12 },
+  },
+  {
+    name: 'Apr',
+    'Clinical Trial App': { passed: 55, failed: 7, pending: 13 },
+    'Patient Portal': { passed: 45, failed: 6, pending: 11 },
+  },
+  {
+    name: 'May',
+    'Clinical Trial App': { passed: 60, failed: 9, pending: 18 },
+    'Patient Portal': { passed: 50, failed: 8, pending: 14 },
+  },
+  {
+    name: 'Jun',
+    'Clinical Trial App': { passed: 65, failed: 12, pending: 20 },
+    'Patient Portal': { passed: 55, failed: 10, pending: 16 },
+  },
 ];
 
 const pieChartData = [
@@ -133,16 +158,9 @@ const GlassCard = ({
 
 export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
-  const [hydratedBarChartData, setHydratedBarChartData] = useState(barChartData);
-
+  
   useEffect(() => {
     setIsClient(true);
-    setHydratedBarChartData(
-      barChartData.map((item) => ({
-        ...item,
-        total: Math.floor(Math.random() * 2000) + 500,
-      }))
-    );
   }, []);
 
   if (!isClient) {
@@ -222,14 +240,14 @@ export default function DashboardPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
             <GlassCard className="lg:col-span-4 p-4 sm:p-6">
               <h3 className="text-lg font-semibold">
-                Test Coverage Overview
+                App-wise Testcase Status
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                A monthly overview of test cases generated.
+                Monthly breakdown of test cases by status for each application.
               </p>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RechartsBarChart data={hydratedBarChartData}>
+                  <RechartsBarChart data={barChartData}>
                     <XAxis
                       dataKey="name"
                       stroke="#888888"
@@ -242,7 +260,6 @@ export default function DashboardPage() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      tickFormatter={(value) => `${value}`}
                     />
                     <Tooltip
                       cursor={{ fill: 'hsla(var(--primary), 0.1)' }}
@@ -252,9 +269,45 @@ export default function DashboardPage() {
                         borderRadius: '0.5rem',
                       }}
                     />
+                    <Legend wrapperStyle={{fontSize: "12px"}}/>
                     <Bar
-                      dataKey="total"
-                      fill="hsl(var(--primary))"
+                      dataKey="Clinical Trial App.passed"
+                      name="Clinical App: Passed"
+                      stackId="a"
+                      fill="#15C9ED"
+                      radius={[0, 0, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="Clinical Trial App.failed"
+                      name="Clinical App: Failed"
+                      stackId="a"
+                      fill="#FF7038"
+                    />
+                     <Bar
+                      dataKey="Clinical Trial App.pending"
+                      name="Clinical App: Pending"
+                      stackId="a"
+                      fill="#FFF026"
+                      radius={[4, 4, 0, 0]}
+                    />
+                     <Bar
+                      dataKey="Patient Portal.passed"
+                      name="Patient Portal: Passed"
+                      stackId="b"
+                      fill="#15C9ED"
+                      radius={[0, 0, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="Patient Portal.failed"
+                      name="Patient Portal: Failed"
+                      stackId="b"
+                      fill="#FF7038"
+                    />
+                     <Bar
+                      dataKey="Patient Portal.pending"
+                      name="Patient Portal: Pending"
+                      stackId="b"
+                      fill="#FFF026"
                       radius={[4, 4, 0, 0]}
                     />
                   </RechartsBarChart>
