@@ -78,8 +78,8 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                 {...getRootProps()}
                 className={cn(
                     'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
-                    'bg-card/50 border border-border/30',
-                     isDragActive ? 'border-primary bg-primary/10' : ''
+                    'bg-card/50 border-2 border-dashed border-border/30',
+                     isDragActive ? 'border-primary bg-primary/10' : 'hover:border-primary/50 hover:bg-primary/5'
                 )}
             >
                 <div className='h-full w-full rounded-xl'>
@@ -238,16 +238,6 @@ export default function RequirementsView({
           onCancelUpload={handleCancelUpload}
         /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
         
-        {requirementsText && !isUploading && (
-          <Card className="bg-muted/50">
-            <CardHeader>
-              <CardTitle className="text-base">Loaded Requirements</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{requirementsText.substring(0, 500)}{requirementsText.length > 500 && '...'}</p>
-            </CardContent>
-          </Card>
-        )}
         <div className="space-y-4">
           <Label>Select Compliance Standards</Label>
           <div className="flex flex-wrap gap-4">
