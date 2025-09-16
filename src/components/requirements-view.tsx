@@ -107,7 +107,7 @@ function FileUpload({ onFilesUpload, transcript, isRecording, startRecording, st
 
 const FileProgress: React.FC<{ file: UploadedFile, onCancel: () => void }> = ({ file, onCancel }) => {
   return (
-    <Card className="bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border-border/30">
+    <Card className="bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border-border/30 w-full">
       <CardContent className="p-4 relative">
         <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={onCancel}>
           <X className="h-4 w-4" />
@@ -296,7 +296,7 @@ export default function RequirementsView({
         /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
         
         {uploadedFiles.length > 0 && (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 grid-cols-1">
             {uploadedFiles.map((uploadedFile, index) => (
               <FileProgress key={index} file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
             ))}
