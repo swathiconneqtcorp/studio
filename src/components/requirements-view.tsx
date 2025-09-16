@@ -254,48 +254,50 @@ export default function RequirementsView({
       <div className="space-y-6">
       {isClient ? (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <div className='md:col-span-1 flex flex-col gap-4'>
+            <div className='md:col-span-2 flex flex-col gap-4'>
                 <FileUpload onFilesUpload={handleFilesUpload} />
             </div>
-            <div className={cn(
-                'relative flex w-full h-full flex-col items-stretch justify-start p-6 rounded-xl transition-colors',
-                'bg-card/50 border-2 border-dashed border-border/30'
-            )}>
-                 <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2'>
-                    <Type className='h-4 w-4' />
-                    <span>Type your requirements</span>
-                </div>
-                 <Textarea 
-                    placeholder="e.g., The system must allow users to log in with their email and password."
-                    className='min-h-[200px] flex-grow bg-transparent'
-                    value={manualText}
-                    onChange={(e) => setManualText(e.target.value)}
-                 />
-            </div>
-            <div className={cn(
-                'relative flex w-full h-full flex-col items-center justify-center p-10 rounded-xl transition-colors',
-                'bg-card/50 border-2 border-dashed border-border/30'
-            )}>
-                 {browserSupportsSpeechRecognition ? (
-                    <div className="flex flex-col items-center gap-2">
-                        <button
-                            onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
-                            className={cn(
-                                "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                                "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
-                            )}
-                            >
-                            {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
-                            <Mic className="h-10 w-10 text-primary-foreground" />
-                        </button>
-                        <p className="text-sm text-muted-foreground mt-2 text-center">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
-                    </div>
-                ) : (
-                    <div className="text-center text-muted-foreground">
-                        <Mic className="h-10 w-10 mx-auto mb-2" />
-                        <p>Voice input is not supported by your browser.</p>
-                    </div>
-                )}
+            <div className='md:col-span-1 flex flex-col gap-6'>
+              <div className={cn(
+                  'relative flex w-full h-full flex-col items-stretch justify-start p-6 rounded-xl transition-colors',
+                  'bg-card/50 border-2 border-dashed border-border/30'
+              )}>
+                  <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2'>
+                      <Type className='h-4 w-4' />
+                      <span>Type your requirements</span>
+                  </div>
+                  <Textarea 
+                      placeholder="e.g., The system must allow users to log in with their email and password."
+                      className='min-h-[100px] flex-grow bg-transparent'
+                      value={manualText}
+                      onChange={(e) => setManualText(e.target.value)}
+                  />
+              </div>
+              <div className={cn(
+                  'relative flex w-full h-full flex-col items-center justify-center p-10 rounded-xl transition-colors',
+                  'bg-card/50 border-2 border-dashed border-border/30'
+              )}>
+                  {browserSupportsSpeechRecognition ? (
+                      <div className="flex flex-col items-center gap-2">
+                          <button
+                              onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
+                              className={cn(
+                                  "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
+                                  "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                              )}
+                              >
+                              {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
+                              <Mic className="h-10 w-10 text-primary-foreground" />
+                          </button>
+                          <p className="text-sm text-muted-foreground mt-2 text-center">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
+                      </div>
+                  ) : (
+                      <div className="text-center text-muted-foreground">
+                          <Mic className="h-10 w-10 mx-auto mb-2" />
+                          <p>Voice input is not supported by your browser.</p>
+                      </div>
+                  )}
+              </div>
             </div>
         </div>
 
@@ -323,5 +325,3 @@ export default function RequirementsView({
     </div>
   );
 }
-
-    
