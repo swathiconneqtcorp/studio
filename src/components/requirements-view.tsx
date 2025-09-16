@@ -13,14 +13,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Loader2, Mic, UploadCloud, X, File as FileIcon, Type, Square, Trash2, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { runValidation, runComplianceCheck } from '@/app/actions';
+import { runValidation, runComplianceCheck, runParseProjectDetails } from '@/app/actions';
 import { useDropzone } from 'react-dropzone';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 
-import type { ValidationResult, ComplianceResult } from '@/lib/types';
+import type { ValidationResult, ComplianceResult, ProjectDetails } from '@/lib/types';
+import ProjectDetailsDialog from './project-details-dialog';
 
 type RequirementsViewProps = {
   requirementsText: string;
@@ -72,32 +73,35 @@ function FileUpload({ onFilesUpload }: { onFilesUpload: (files: File[], source: 
 
 const FileProgress: React.FC<{ file: UploadedFile, onCancel: () => void }> = ({ file, onCancel }) => {
   return (
-    <div className="bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border border-border/30 rounded-xl p-4 w-full relative">
-        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-muted-foreground hover:text-foreground" onClick={onCancel}>
-            <X className="h-4 w-4" />
-        </Button>
-        <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-lg">
-                <FileIcon className="w-8 h-8 text-primary" strokeWidth={1.5} />
+    <div className="bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm rounded-xl p-4 w-full relative group">
+        <div className="absolute -inset-px bg-card-border rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="relative">
+            <Button variant="ghost" size="icon" className="absolute top-0 right-0 h-6 w-6 text-muted-foreground hover:text-foreground" onClick={onCancel}>
+                <X className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-primary/10 rounded-lg">
+                    <FileIcon className="w-8 h-8 text-primary" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1 overflow-hidden">
+                    <p className="font-semibold truncate">{file.file.name}</p>
+                    <p className="text-sm text-muted-foreground">{`${(file.file.size / 1024).toFixed(2)} KB`}</p>
+                </div>
             </div>
-            <div className="flex-1 overflow-hidden">
-                <p className="font-semibold truncate">{file.file.name}</p>
-                <p className="text-sm text-muted-foreground">{`${(file.file.size / 1024).toFixed(2)} KB`}</p>
+            <div className="mt-4 space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {file.progress < 100 ? (
+                        <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span>Uploading...</span>
+                        </>
+                    ) : (
+                        <span>Ready</span>
+                    )}
+                    <span className="ml-auto font-semibold text-foreground">{Math.round(file.progress)}%</span>
+                </div>
+                <Progress value={file.progress} className="h-2 bg-primary/20" />
             </div>
-        </div>
-        <div className="mt-4 space-y-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                {file.progress < 100 ? (
-                    <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Uploading...</span>
-                    </>
-                ) : (
-                    <span>Ready</span>
-                )}
-                <span className="ml-auto font-semibold text-foreground">{Math.round(file.progress)}%</span>
-            </div>
-            <Progress value={file.progress} className="h-2" />
         </div>
     </div>
   );
@@ -115,6 +119,8 @@ export default function RequirementsView({
   const [recordedAudio, setRecordedAudio] = useState<{url: string, transcript: string} | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const audioRef = React.useRef<HTMLAudioElement>(null);
+  const [isProjectDetailsDialogOpen, setIsProjectDetailsDialogOpen] = useState(false);
+  const [parsedDetails, setParsedDetails] = useState<ProjectDetails | null>(null);
   
   const { toast } = useToast();
   const {
@@ -264,11 +270,35 @@ export default function RequirementsView({
     }, [uploadedFiles, manualText, setRequirementsText]);
 
 
-  const handleAnalyze = () => {
+  const handleOpenDetailsDialog = () => {
+    startTransition(async () => {
+        try {
+            const reqText = requirementsText || "Login screen";
+            const details = await runParseProjectDetails(reqText);
+            setParsedDetails(details);
+            setIsProjectDetailsDialogOpen(true);
+        } catch(error) {
+            console.error(error);
+            toast({
+                title: 'Parsing Failed',
+                description: 'Could not parse project details from requirements.',
+                variant: 'destructive',
+            });
+            // Fallback to old behavior if parsing fails
+            handleAnalyze();
+        }
+    });
+  }
+
+  const handleAnalyze = (projectDetails: ProjectDetails) => {
+    setIsProjectDetailsDialogOpen(false);
     startTransition(async () => {
       try {
         const reqText = requirementsText || "Login screen";
         const standards = 'FDA, GDPR, ISO 13485, HIPAA';
+
+        // You can use projectDetails here if needed for subsequent steps
+        console.log('Confirmed Project Details:', projectDetails);
 
         const [validation, compliance] = await Promise.all([
           runValidation({requirements: reqText}),
@@ -378,7 +408,7 @@ export default function RequirementsView({
         ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
           
           {uploadedFiles.length > 0 && (
-            <div className="grid gap-4 grid-cols-1">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {uploadedFiles.map((uploadedFile, index) => (
                 <FileProgress key={index} file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
               ))}
@@ -387,7 +417,7 @@ export default function RequirementsView({
         </div>
       </div>
       <div className="p-5">
-        <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || !allFilesUploaded} className="w-full">
+        <Button onClick={handleOpenDetailsDialog} disabled={isPending || !requirementsText || !allFilesUploaded} className="w-full">
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -398,8 +428,13 @@ export default function RequirementsView({
             )}
           </Button>
       </div>
+       <ProjectDetailsDialog
+        isOpen={isProjectDetailsDialogOpen}
+        onClose={() => setIsProjectDetailsDialogOpen(false)}
+        onConfirm={handleAnalyze}
+        initialData={parsedDetails}
+        isLoading={isPending && !parsedDetails}
+      />
     </div>
   );
 }
-
-    

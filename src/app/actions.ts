@@ -4,7 +4,8 @@ import { validateRequirements } from '@/ai/flows/validate-requirements';
 import { complianceCheck } from '@/ai/flows/compliance-check';
 import { generateTestCases } from '@/ai/flows/automated-test-case-generation';
 import { analyzeImpactOnChange } from '@/ai/flows/impact-analysis-on-change';
-import type { TestCase } from '@/lib/types';
+import { parseProjectDetails } from '@/ai/flows/parse-project-details';
+import type { TestCase, ProjectDetails } from '@/lib/types';
 
 export async function runValidation(requirements: string) {
   return await validateRequirements({ requirements });
@@ -28,4 +29,8 @@ export async function runImpactAnalysis(
 ) {
   const testCasesString = existingTestCases.map(tc => `ID: ${tc.testCaseId}, Title: ${tc.title}`).join('\n');
   return await analyzeImpactOnChange({ requirementChanges, existingTestCases: testCasesString });
+}
+
+export async function runParseProjectDetails(requirements: string): Promise<ProjectDetails> {
+  return await parseProjectDetails({ requirements });
 }
