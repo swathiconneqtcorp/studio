@@ -11,13 +11,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2, Mic, UploadCloud, X, File as FileIcon } from 'lucide-react';
+import { Loader2, Mic, UploadCloud, X, File as FileIcon, Type } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { runValidation, runComplianceCheck } from '@/app/actions';
 import { useDropzone } from 'react-dropzone';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
 
 import type { ValidationResult, ComplianceResult } from '@/lib/types';
 
@@ -35,11 +36,7 @@ type UploadedFile = {
 };
 
 
-function FileUpload({ onFilesUpload, transcript, isRecording, startRecording, stopRecording }: any) {
-    const {
-        browserSupportsSpeechRecognition
-    } = useSpeechRecognition();
-
+function FileUpload({ onFilesUpload }: { onFilesUpload: (files: File[], source: 'upload' | 'speech') => void; }) {
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
             onFilesUpload(acceptedFiles, 'upload');
@@ -47,60 +44,28 @@ function FileUpload({ onFilesUpload, transcript, isRecording, startRecording, st
     }, [onFilesUpload]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: {'text/plain': ['.txt', '.md'], 'application/pdf': ['.pdf'], 'application/msword': ['.doc', '.docx']} });
-    
-    useEffect(() => {
-        if(transcript && !isRecording) {
-            const speechFile = new File([transcript], `speech-recognition-${new Date().toISOString()}.txt`, { type: "text/plain" });
-            onFilesUpload([speechFile], 'speech');
-        }
-    }, [transcript, isRecording, onFilesUpload])
-
 
     return (
-        <div className="flex flex-col items-center gap-6">
-             <div
-                {...getRootProps()}
-                className={cn(
-                    'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
-                    'bg-card/50 border-2 border-dashed border-border/30',
-                     isDragActive ? 'border-primary bg-primary/10' : 'hover:border-primary/50 hover:bg-primary/5'
-                )}
-            >
-                <div className='h-full w-full rounded-xl'>
-                    <input {...getInputProps()} />
-                    <div className='flex flex-col items-center justify-center'>
-                        <UploadCloud className="w-12 h-12 text-primary" />
-                        <p className="mt-4 text-center text-foreground">
-                            {isDragActive
-                                ? 'Drop the files here ...'
-                                : "Drag 'n' drop requirement files here, or click to select"}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">TXT, PDF, DOC, DOCX</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div className="flex items-center w-full">
-                <div className="flex-grow border-t border-border"></div>
-                <span className="flex-shrink mx-4 text-muted-foreground">OR</span>
-                <div className="flex-grow border-t border-border"></div>
-            </div>
-
-            {browserSupportsSpeechRecognition && (
-                <div className="flex flex-col items-center gap-2">
-                    <button
-                        onClick={isRecording ? stopRecording : startRecording}
-                        className={cn(
-                            "relative flex items-center justify-center w-20 h-20 rounded-full transition-all duration-300 focus:outline-none",
-                            "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
-                        )}
-                        >
-                        {isRecording && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
-                        <Mic className="h-6 w-6 text-primary-foreground" />
-                    </button>
-                    <p className="text-sm text-muted-foreground mt-2">{isRecording ? 'Recording... click to stop' : 'Use your voice'}</p>
-                </div>
+        <div
+            {...getRootProps()}
+            className={cn(
+                'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
+                'bg-card/50 border-2 border-dashed border-border/30',
+                 isDragActive ? 'border-primary bg-primary/10' : 'hover:border-primary/50 hover:bg-primary/5'
             )}
+        >
+            <div className='h-full w-full rounded-xl'>
+                <input {...getInputProps()} />
+                <div className='flex flex-col items-center justify-center'>
+                    <UploadCloud className="w-12 h-12 text-primary" />
+                    <p className="mt-4 text-center text-foreground">
+                        {isDragActive
+                            ? 'Drop the files here ...'
+                            : "Drag 'n' drop requirement files here, or click to select"}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">TXT, PDF, DOC, DOCX</p>
+                </div>
+            </div>
         </div>
       );
 }
@@ -146,7 +111,7 @@ export default function RequirementsView({
   onAnalysisComplete,
 }: RequirementsViewProps) {
   const [isPending, startTransition] = useTransition();
-  const [selectedStandards, setSelectedStandards] = useState<string[]>(['FDA']);
+  const [manualText, setManualText] = useState('');
   const [isClient, setIsClient] = useState(false);
   const { toast } = useToast();
   const {
@@ -175,6 +140,14 @@ export default function RequirementsView({
       const handleCancelUpload = (fileName: string) => {
         setUploadedFiles(prev => prev.filter(f => f.file.name !== fileName));
       };
+
+      useEffect(() => {
+        if(transcript && !listening) {
+            const speechFile = new File([transcript], `speech-recognition-${new Date().toISOString()}.txt`, { type: "text/plain" });
+            handleFilesUpload([speechFile], 'speech');
+            resetTranscript();
+        }
+    }, [transcript, listening, resetTranscript])
 
       useEffect(() => {
         uploadedFiles.forEach((uploadedFile, index) => {
@@ -233,8 +206,9 @@ export default function RequirementsView({
             .filter(f => f.content)
             .map(f => f.content)
             .join('\n\n');
-        setRequirementsText(allContent);
-    }, [uploadedFiles, setRequirementsText]);
+        
+        setRequirementsText([allContent, manualText].filter(Boolean).join('\n\n'));
+    }, [uploadedFiles, manualText, setRequirementsText]);
 
 
   const handleAnalyze = () => {
@@ -244,7 +218,7 @@ export default function RequirementsView({
         const standards = 'FDA, GDPR, ISO 13485, HIPAA';
 
         const [validation, compliance] = await Promise.all([
-          runValidation(reqText),
+          runValidation({requirements: reqText}),
           runComplianceCheck(
             reqText,
             standards
@@ -266,14 +240,6 @@ export default function RequirementsView({
     });
   };
 
-  const handleStandardChange = (standardId: string) => {
-    setSelectedStandards((prev) =>
-      prev.includes(standardId)
-        ? prev.filter((id) => id !== standardId)
-        : [...prev, standardId]
-    );
-  };
-
   const allFilesUploaded = uploadedFiles.every(f => f.progress === 100);
 
   return (
@@ -281,19 +247,51 @@ export default function RequirementsView({
       <div className="flex flex-col space-y-1.5">
           <h1 className="text-2xl font-semibold leading-none tracking-tight">Import Requirement</h1>
           <p className="text-sm text-muted-foreground">
-            Upload your software requirements document or use your voice. Our AI
+            Upload your software requirements document, type them directly, or use your voice. Our AI
             will analyze it for completeness and compliance.
           </p>
       </div>
       <div className="space-y-6">
-      {isClient ? <FileUpload
-          onFilesUpload={handleFilesUpload}
-          transcript={transcript}
-          isRecording={listening}
-          startRecording={() => SpeechRecognition.startListening({ continuous: true })}
-          stopRecording={SpeechRecognition.stopListening}
-          browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-        /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
+      {isClient ? (
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+            <div className='md:col-span-1 flex flex-col gap-4'>
+                <FileUpload onFilesUpload={handleFilesUpload} />
+            </div>
+            <div className='md:col-span-2 flex flex-col gap-4'>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                    <Type className='h-4 w-4' />
+                    <span>Type your requirements</span>
+                </div>
+                 <Textarea 
+                    placeholder="e.g., The system must allow users to log in with their email and password."
+                    className='min-h-[200px] flex-grow'
+                    value={manualText}
+                    onChange={(e) => setManualText(e.target.value)}
+                 />
+                 {browserSupportsSpeechRecognition && (
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="flex items-center w-full">
+                            <div className="flex-grow border-t border-border"></div>
+                            <span className="flex-shrink mx-4 text-muted-foreground text-xs">OR</span>
+                            <div className="flex-grow border-t border-border"></div>
+                        </div>
+                        <button
+                            onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
+                            className={cn(
+                                "relative flex items-center justify-center w-16 h-16 rounded-full transition-all duration-300 focus:outline-none",
+                                "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                            )}
+                            >
+                            {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
+                            <Mic className="h-6 w-6 text-primary-foreground" />
+                        </button>
+                        <p className="text-sm text-muted-foreground mt-1">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
+                    </div>
+                )}
+            </div>
+        </div>
+
+      ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
         
         {uploadedFiles.length > 0 && (
           <div className="grid gap-4 grid-cols-1">
@@ -317,7 +315,5 @@ export default function RequirementsView({
     </div>
   );
 }
-
-    
 
     
