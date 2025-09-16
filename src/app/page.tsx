@@ -284,7 +284,7 @@ export default function DashboardPage() {
                       dataKey="Clinical Trial App.failed"
                       name="Clinical App: Failed"
                       stackId="a"
-                      fill="#FF7038"
+                      fill="#B72B49"
                     />
                      <Bar
                       dataKey="Clinical Trial App.pending"
@@ -304,7 +304,7 @@ export default function DashboardPage() {
                       dataKey="Patient Portal.failed"
                       name="Patient Portal: Failed"
                       stackId="b"
-                      fill="#FF7038"
+                      fill="#B72B49"
                     />
                      <Bar
                       dataKey="Patient Portal.pending"
@@ -407,3 +407,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
