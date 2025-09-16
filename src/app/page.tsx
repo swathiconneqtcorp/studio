@@ -117,12 +117,14 @@ const testRunsByApp = [
     tests: [
       {
         id: 'TR-001',
+        userStoryId: 'US-401',
         status: 'Running',
         progress: 75,
         jiraLink: 'https://jira.example.com/browse/CTA-123',
       },
       {
         id: 'TR-006',
+        userStoryId: 'US-402',
         status: 'Passed',
         progress: 100,
         jiraLink: 'https://jira.example.com/browse/CTA-120',
@@ -132,7 +134,7 @@ const testRunsByApp = [
   {
     appName: 'Patient Portal',
     tests: [
-      { id: 'TR-002', status: 'Passed', progress: 100, jiraLink: null },
+      { id: 'TR-002', userStoryId: 'US-512', status: 'Passed', progress: 100, jiraLink: null },
     ],
   },
   {
@@ -140,6 +142,7 @@ const testRunsByApp = [
     tests: [
       {
         id: 'TR-003',
+        userStoryId: 'US-603',
         status: 'Failed',
         progress: 100,
         jiraLink: 'https://jira.example.com/browse/EHR-456',
@@ -151,6 +154,7 @@ const testRunsByApp = [
     tests: [
       {
         id: 'TR-004',
+        userStoryId: 'US-721',
         status: 'Passed',
         progress: 100,
         jiraLink: 'https://jira.example.com/browse/TP-789',
@@ -160,8 +164,8 @@ const testRunsByApp = [
   {
     appName: 'Pharmacy Management',
     tests: [
-      { id: 'TR-005', status: 'Running', progress: 40, jiraLink: null },
-      { id: 'TR-007', status: 'Pending', progress: 0, jiraLink: null },
+      { id: 'TR-005', userStoryId: 'US-815', status: 'Running', progress: 40, jiraLink: null },
+      { id: 'TR-007', userStoryId: 'US-816', status: 'Pending', progress: 0, jiraLink: null },
     ],
   },
 ];
@@ -409,6 +413,7 @@ export default function DashboardPage() {
                       <TableHeader>
                         <TableRow className="border-b-white/10">
                           <TableHead>Test ID</TableHead>
+                          <TableHead>User Story ID</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead>Progress</TableHead>
                           <TableHead>Jira Link</TableHead>
@@ -418,6 +423,7 @@ export default function DashboardPage() {
                         {app.tests.map((run) => (
                           <TableRow key={run.id} className="border-b-0">
                             <TableCell className="font-medium">{run.id}</TableCell>
+                            <TableCell>{run.userStoryId}</TableCell>
                             <TableCell>
                               <Badge
                                 style={{
@@ -456,5 +462,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
