@@ -184,7 +184,9 @@ export default function RequirementsView({
                 const text = e.target?.result as string;
                 setUploadedFiles(prev => {
                     const newFiles = [...prev];
-                    newFiles[index].content = text;
+                    if (newFiles[index]) {
+                      newFiles[index].content = text;
+                    }
                     return newFiles;
                 });
             };
@@ -213,11 +215,13 @@ export default function RequirementsView({
                 reader.readAsText(uploadedFile.file);
             } else {
                 // For speech, content is already there
-                const content = uploadedFile.file.text().then(text => {
+                uploadedFile.file.text().then(text => {
                     setUploadedFiles(prev => {
                         const newFiles = [...prev];
-                        newFiles[index].content = text;
-                        newFiles[index].progress = 100;
+                        if (newFiles[index]) {
+                            newFiles[index].content = text;
+                            newFiles[index].progress = 100;
+                        }
                         return newFiles;
                     });
                 });
@@ -225,7 +229,10 @@ export default function RequirementsView({
           }
         });
 
-        const allContent = uploadedFiles.map(f => f.content).join('\n\n');
+        const allContent = uploadedFiles
+            .filter(f => f.content)
+            .map(f => f.content)
+            .join('\n\n');
         setRequirementsText(allContent);
     }, [uploadedFiles, setRequirementsText]);
 
@@ -310,5 +317,7 @@ export default function RequirementsView({
     </div>
   );
 }
+
+    
 
     
