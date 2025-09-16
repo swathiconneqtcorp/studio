@@ -238,21 +238,6 @@ export default function RequirementsView({
           onCancelUpload={handleCancelUpload}
         /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
         
-        <div className="space-y-4">
-          <Label>Select Compliance Standards</Label>
-          <div className="flex flex-wrap gap-4">
-            {complianceOptions.map((option) => (
-              <div key={option.id} className="flex items-center gap-2">
-                <Checkbox
-                  id={option.id}
-                  checked={selectedStandards.includes(option.id)}
-                  onCheckedChange={() => handleStandardChange(option.id)}
-                />
-                <Label htmlFor={option.id}>{option.label}</Label>
-              </div>
-            ))}
-          </div>
-        </div>
         <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || isUploading} className="w-full">
           {isPending ? (
             <>
