@@ -214,14 +214,6 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="search"
-                placeholder="Search..."
-                className="w-full rounded-lg bg-black/30 border border-border/50 pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
