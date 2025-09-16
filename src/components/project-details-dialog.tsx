@@ -17,6 +17,7 @@ import { Loader2 } from 'lucide-react';
 import type { ProjectDetails } from '@/lib/types';
 import { Badge } from './ui/badge';
 import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type ProjectDetailsDialogProps = {
   isOpen: boolean;
@@ -86,10 +87,10 @@ export default function ProjectDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-2xl bg-white text-black">
         <DialogHeader>
           <DialogTitle>Confirm Project Details</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-600">
             Our AI has parsed the following details from your requirements. Please review and confirm or edit them.
           </DialogDescription>
         </DialogHeader>
@@ -107,7 +108,7 @@ export default function ProjectDetailsDialog({
                 id="appName"
                 value={details.appName}
                 onChange={(e) => setDetails({...details, appName: e.target.value})}
-                className="col-span-3"
+                className="col-span-3 bg-gray-100 border-gray-300 text-black"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -118,7 +119,7 @@ export default function ProjectDetailsDialog({
                 id="objective"
                 value={details.objective}
                 onChange={(e) => setDetails({...details, objective: e.target.value})}
-                className="col-span-3"
+                className="col-span-3 bg-gray-100 border-gray-300 text-black"
                 rows={2}
               />
             </div>
@@ -131,13 +132,13 @@ export default function ProjectDetailsDialog({
                   id="features"
                   placeholder="Type a feature and press Enter"
                   onKeyDown={handleFeaturesKeyDown}
-                  className="mb-2"
+                  className="mb-2 bg-gray-100 border-gray-300 text-black"
                 />
                 <div className="flex flex-wrap gap-2">
                     {details.features.map((feature, index) => (
-                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        <Badge key={index} variant="secondary" className="flex items-center gap-1 bg-gray-200 text-black hover:bg-gray-300">
                             {feature}
-                            <button onClick={() => removeFeature(feature)} className="rounded-full hover:bg-background/50">
+                            <button onClick={() => removeFeature(feature)} className="rounded-full hover:bg-white/50">
                                 <X className="h-3 w-3" />
                             </button>
                         </Badge>
@@ -154,13 +155,13 @@ export default function ProjectDetailsDialog({
                   id="techStack"
                   placeholder="Type a technology and press Enter"
                   onKeyDown={handleTechStackKeyDown}
-                  className="mb-2"
+                  className="mb-2 bg-gray-100 border-gray-300 text-black"
                 />
                 <div className="flex flex-wrap gap-2">
                     {details.techStack.map((tech, index) => (
-                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        <Badge key={index} variant="secondary" className="flex items-center gap-1 bg-gray-200 text-black hover:bg-gray-300">
                             {tech}
-                            <button onClick={() => removeTechStack(tech)} className="rounded-full hover:bg-background/50">
+                            <button onClick={() => removeTechStack(tech)} className="rounded-full hover:bg-white/50">
                                 <X className="h-3 w-3" />
                             </button>
                         </Badge>
@@ -171,7 +172,7 @@ export default function ProjectDetailsDialog({
           </div>
         )}
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+          <Button type="button" variant="outline" onClick={onClose} className="text-black border-gray-300 hover:bg-gray-100">Cancel</Button>
           <Button type="submit" onClick={handleSubmit} disabled={isLoading}>Confirm & Analyze</Button>
         </DialogFooter>
       </DialogContent>
