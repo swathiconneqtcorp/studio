@@ -101,34 +101,34 @@ export default function ProjectDetailsDialog({
           </div>
         ) : (
           <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="appName" className="text-right">
+            <div className="grid gap-2">
+              <Label htmlFor="appName">
                 App Name
               </Label>
               <Input
                 id="appName"
                 value={details.appName}
                 onChange={(e) => setDetails({...details, appName: e.target.value})}
-                className="col-span-3 bg-gray-100 border-gray-300 text-black"
+                className="bg-gray-100 border-gray-300 text-black"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="objective" className="text-right">
+            <div className="grid gap-2">
+              <Label htmlFor="objective">
                 Objective
               </Label>
               <Textarea
                 id="objective"
                 value={details.objective}
                 onChange={(e) => setDetails({...details, objective: e.target.value})}
-                className="col-span-3 bg-gray-100 border-gray-300 text-black"
+                className="bg-gray-100 border-gray-300 text-black"
                 rows={2}
               />
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="features" className="text-right pt-2">
+            <div className="grid gap-2">
+              <Label htmlFor="features">
                 Features
               </Label>
-               <div className="col-span-3">
+               <div>
                 <Input
                   id="features"
                   placeholder="Type a feature and press Enter"
@@ -147,11 +147,11 @@ export default function ProjectDetailsDialog({
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="techStack" className="text-right pt-2">
+            <div className="grid gap-2">
+              <Label htmlFor="techStack">
                 Tech Stack
               </Label>
-              <div className="col-span-3">
+              <div>
                 <Input
                   id="techStack"
                   placeholder="Type a technology and press Enter"
