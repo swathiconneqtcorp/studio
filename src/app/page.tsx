@@ -277,7 +277,7 @@ export default function DashboardPage() {
                       dataKey="Clinical Trial App.passed"
                       name="Clinical App: Passed"
                       stackId="a"
-                      fill="#15C9ED"
+                      fill="#8BEA70"
                       radius={[0, 0, 0, 0]}
                     />
                     <Bar
@@ -297,7 +297,7 @@ export default function DashboardPage() {
                       dataKey="Patient Portal.passed"
                       name="Patient Portal: Passed"
                       stackId="b"
-                      fill="#15C9ED"
+                      fill="#8BEA70"
                       radius={[0, 0, 0, 0]}
                     />
                     <Bar
