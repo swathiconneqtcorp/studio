@@ -5,7 +5,6 @@ import React, { useState, useTransition, useCallback, useEffect } from 'react';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -108,12 +107,12 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                     <button
                         onClick={isRecording ? stopRecording : startRecording}
                         className={cn(
-                            "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                            "bg-gradient-to-br from-[hsl(var(--mic-bg-start))] to-[hsl(var(--mic-bg-end))] shadow-[0_0_40px_-10px_hsl(var(--mic-glow))]"
+                            "relative flex items-center justify-center w-20 h-20 rounded-full transition-all duration-300 focus:outline-none",
+                            "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
                         )}
                         >
-                        {isRecording && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-purple-400 pulse-ring"></div>}
-                        <Mic className="h-8 w-8 text-white" />
+                        {isRecording && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
+                        <Mic className="h-6 w-6 text-primary-foreground" />
                     </button>
                     <p className="text-sm text-muted-foreground mt-2">{isRecording ? 'Recording... click to stop' : 'Use your voice'}</p>
                 </div>
