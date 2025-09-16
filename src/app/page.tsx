@@ -32,6 +32,7 @@ import {
   ArrowDown,
   ArrowUp,
   Bug,
+  FolderKanban,
 } from 'lucide-react';
 import {
   Bar,
@@ -44,6 +45,9 @@ import {
   PieChart,
   Cell,
   Legend,
+  LineChart,
+  Line,
+  CartesianGrid,
 } from 'recharts';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -64,6 +68,14 @@ const kpiData = [
     change: '+5.2%',
     changeType: 'increase',
     vsLastMonth: '2,229',
+  },
+    {
+    title: 'Total Projects',
+    value: '8',
+    icon: FolderKanban,
+    change: '+1',
+    changeType: 'increase',
+    vsLastMonth: '7',
   },
   {
     title: 'Total Apps Used',
@@ -90,12 +102,14 @@ const barChartData = [
     { name: 'Telemedicine', passed: 180, failed: 15, pending: 30 },
 ];
 
-const defectData = [
-  { name: 'New', count: 25, fill: '#3b82f6' },
-  { name: 'Open', count: 40, fill: '#f97316' },
-  { name: 'In Progress', count: 15, fill: '#a855f7' },
-  { name: 'Retest', count: 30, fill: '#eab308' },
-  { name: 'Closed', count: 150, fill: '#22c55e' },
+const defectTrendData = [
+  { date: '2024-07-01', opened: 10, closed: 8 },
+  { date: '2024-07-02', opened: 12, closed: 9 },
+  { date: '2024-07-03', opened: 8, closed: 10 },
+  { date: '2024-07-04', opened: 15, closed: 11 },
+  { date: '2024-07-05', opened: 9, closed: 12 },
+  { date: '2024-07-06', opened: 7, closed: 7 },
+  { date: '2024-07-07', opened: 11, closed: 13 },
 ];
 
 const testRunsData = [
@@ -170,7 +184,7 @@ export default function DashboardPage() {
         </div>
 
         <main className="mt-8 grid flex-1 items-start gap-8">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
             {kpiData.map((kpi) => (
               <GlassCard key={kpi.title}>
               <Card className="bg-transparent border-0 h-full">
@@ -273,21 +287,21 @@ export default function DashboardPage() {
             </GlassCard>
 
             <GlassCard className="lg:col-span-3 p-4 sm:p-6">
-              <h3 className="text-lg font-semibold">
-                Defect Management Metrics
-              </h3>
+              <h3 className="text-lg font-semibold">Defect Trend</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Number of bugs based on their current status.
+                Bugs opened vs. bugs closed daily.
               </p>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RechartsBarChart data={defectData}>
+                  <LineChart data={defectTrendData}>
+                    <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
                     <XAxis
-                      dataKey="name"
+                      dataKey="date"
                       stroke="#888888"
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
+                      tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}
                     />
                     <YAxis
                       stroke="#888888"
@@ -296,19 +310,33 @@ export default function DashboardPage() {
                       axisLine={false}
                     />
                     <Tooltip
-                       cursor={{ fill: 'hsla(var(--primary), 0.1)' }}
-                       contentStyle={{
-                         backgroundColor: 'rgba(5, 5, 5, 0.8)',
-                         borderColor: 'hsl(var(--border))',
-                         borderRadius: '0.5rem',
-                       }}
+                      cursor={{ fill: 'hsla(var(--primary), 0.1)' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(5, 5, 5, 0.8)',
+                        borderColor: 'hsl(var(--border))',
+                        borderRadius: '0.5rem',
+                      }}
                     />
-                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                      {defectData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                      ))}
-                    </Bar>
-                  </RechartsBarChart>
+                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Line
+                      type="monotone"
+                      dataKey="opened"
+                      name="Bugs Opened"
+                      stroke="#B72B49"
+                      strokeWidth={2}
+                      dot={{ r: 4, fill: '#B72B49' }}
+                      activeDot={{ r: 6 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="closed"
+                      name="Bugs Closed"
+                      stroke="#8BEA70"
+                      strokeWidth={2}
+                      dot={{ r: 4, fill: '#8BEA70' }}
+                      activeDot={{ r: 6 }}
+                    />
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </GlassCard>
