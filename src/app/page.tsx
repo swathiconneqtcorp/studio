@@ -33,6 +33,7 @@ import {
   ArrowUp,
   Bug,
   FolderKanban,
+  Link as LinkIcon,
 } from 'lucide-react';
 import {
   Bar,
@@ -51,6 +52,12 @@ import {
 } from 'recharts';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const kpiData = [
   {
@@ -112,13 +119,61 @@ const defectTrendData = [
   { date: '2024-07-07', opened: 11, closed: 13 },
 ];
 
-const testRunsData = [
-  { id: 'TR-001', app: 'Clinical Trial App', status: 'Running', progress: 75 },
-  { id: 'TR-002', app: 'Patient Portal', status: 'Passed', progress: 100 },
-  { id: 'TR-003', app: 'EHR System', status: 'Failed', progress: 100 },
-  { id: 'TR-004', app: 'Telemedicine Platform', status: 'Passed', progress: 100 },
-  { id: 'TR-005', app: 'Pharmacy Management', status: 'Running', progress: 40 },
+const testRunsByApp = [
+  {
+    appName: 'Clinical Trial App',
+    tests: [
+      {
+        id: 'TR-001',
+        status: 'Running',
+        progress: 75,
+        jiraLink: 'https://jira.example.com/browse/CTA-123',
+      },
+      {
+        id: 'TR-006',
+        status: 'Passed',
+        progress: 100,
+        jiraLink: 'https://jira.example.com/browse/CTA-120',
+      },
+    ],
+  },
+  {
+    appName: 'Patient Portal',
+    tests: [
+      { id: 'TR-002', status: 'Passed', progress: 100, jiraLink: null },
+    ],
+  },
+  {
+    appName: 'EHR System',
+    tests: [
+      {
+        id: 'TR-003',
+        status: 'Failed',
+        progress: 100,
+        jiraLink: 'https://jira.example.com/browse/EHR-456',
+      },
+    ],
+  },
+  {
+    appName: 'Telemedicine Platform',
+    tests: [
+      {
+        id: 'TR-004',
+        status: 'Passed',
+        progress: 100,
+        jiraLink: 'https://jira.example.com/browse/TP-789',
+      },
+    ],
+  },
+  {
+    appName: 'Pharmacy Management',
+    tests: [
+      { id: 'TR-005', status: 'Running', progress: 40, jiraLink: null },
+      { id: 'TR-007', status: 'Pending', progress: 0, jiraLink: null },
+    ],
+  },
 ];
+
 
 const GlassCard = ({
   children,
@@ -345,44 +400,64 @@ export default function DashboardPage() {
           <GlassCard className="p-4 sm:p-6">
             <h3 className="text-lg font-semibold">Recent Test Runs</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              An overview of your recent test case executions.
+              An overview of your recent test case executions by application.
             </p>
-            <div>
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-b-white/10">
-                    <TableHead>Test ID</TableHead>
-                    <TableHead>Application</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Progress</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {testRunsData.map((run) => (
-                    <TableRow key={run.id} className="border-b-0">
-                      <TableCell className="font-medium">{run.id}</TableCell>
-                      <TableCell>{run.app}</TableCell>
-                      <TableCell>
-                        <Badge
-                          style={{
-                            backgroundColor: run.status === 'Passed' ? '#8BEA70' : run.status === 'Failed' ? '#B72B49' : undefined,
-                            color: run.status === 'Passed' ? 'black' : 'white',
-                          }}
-                          className={cn({
-                            'bg-secondary text-secondary-foreground hover:bg-secondary/80': run.status === 'Running'
-                          })}
-                        >
-                          {run.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {run.progress}%
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <Accordion type="multiple" className="w-full">
+              {testRunsByApp.map((app) => (
+                <AccordionItem value={app.appName} key={app.appName}>
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center gap-4">
+                      <FolderKanban className="h-5 w-5 text-primary" />
+                      <span className="font-semibold">{app.appName}</span>
+                      <Badge variant="outline">{app.tests.length} tests</Badge>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-b-white/10">
+                          <TableHead>Test ID</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Progress</TableHead>
+                          <TableHead>Jira Link</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {app.tests.map((run) => (
+                          <TableRow key={run.id} className="border-b-0">
+                            <TableCell className="font-medium">{run.id}</TableCell>
+                            <TableCell>
+                              <Badge
+                                style={{
+                                  backgroundColor: run.status === 'Passed' ? '#8BEA70' : run.status === 'Failed' ? '#B72B49' : run.status === 'Pending' ? '#f97316' : undefined,
+                                  color: run.status === 'Passed' ? 'black' : 'white',
+                                }}
+                                className={cn({
+                                  'bg-secondary text-secondary-foreground hover:bg-secondary/80': run.status === 'Running'
+                                })}
+                              >
+                                {run.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{run.progress}%</TableCell>
+                            <TableCell>
+                              {run.jiraLink ? (
+                                <a href={run.jiraLink} target="_blank" rel="noopener noreferrer" className='flex items-center gap-1.5 text-blue-400 hover:text-blue-300 hover:underline'>
+                                  <LinkIcon className="h-4 w-4" />
+                                  <span>Open Ticket</span>
+                                </a>
+                              ) : (
+                                <span className='text-muted-foreground'>-</span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </GlassCard>
         </main>
       </div>
