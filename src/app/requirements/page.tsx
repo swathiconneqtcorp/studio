@@ -33,15 +33,15 @@ export default function RequirementsPage() {
   };
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <Header title="Import Requirement" />
-      <main className="flex-1 p-4 lg:p-6">
+      <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
         <RequirementsView
           requirementsText={requirementsText}
           setRequirementsText={setRequirementsText}
           onAnalysisComplete={handleAnalysisComplete}
         />
       </main>
-    </>
+    </div>
   );
 }

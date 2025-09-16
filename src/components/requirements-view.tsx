@@ -243,84 +243,87 @@ export default function RequirementsView({
   const allFilesUploaded = uploadedFiles.every(f => f.progress === 100);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col space-y-1.5">
-          <h1 className="text-2xl font-semibold leading-none tracking-tight">Import Requirement</h1>
-          <p className="text-sm text-muted-foreground">
-            Upload your software requirements document, type them directly, or use your voice. Our AI
-            will analyze it for completeness and compliance.
-          </p>
-      </div>
-      <div className="space-y-6">
-      {isClient ? (
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <div className='md:col-span-2 flex flex-col gap-4'>
-                <FileUpload onFilesUpload={handleFilesUpload} />
-            </div>
-            <div className='md:col-span-1 flex flex-col gap-6'>
-              <div className={cn(
-                  'relative flex w-full h-full flex-col items-stretch justify-start p-6 rounded-xl transition-colors',
-                  'bg-card/50 border-2 border-dashed border-border/30'
-              )}>
-                  <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2'>
-                      <Type className='h-4 w-4' />
-                      <span>Type your requirements</span>
-                  </div>
-                  <Textarea 
-                      placeholder="e.g., The system must allow users to log in with their email and password."
-                      className='min-h-[100px] flex-grow bg-transparent'
-                      value={manualText}
-                      onChange={(e) => setManualText(e.target.value)}
-                  />
-              </div>
-              <div className={cn(
-                  'relative flex w-full h-full flex-col items-center justify-center p-10 rounded-xl transition-colors',
-                  'bg-card/50 border-2 border-dashed border-border/30'
-              )}>
-                  {browserSupportsSpeechRecognition ? (
-                      <div className="flex flex-col items-center gap-2">
-                          <button
-                              onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
-                              className={cn(
-                                  "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                                  "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
-                              )}
-                              >
-                              {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
-                              <Mic className="h-10 w-10 text-primary-foreground" />
-                          </button>
-                          <p className="text-sm text-muted-foreground mt-2 text-center">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
-                      </div>
-                  ) : (
-                      <div className="text-center text-muted-foreground">
-                          <Mic className="h-10 w-10 mx-auto mb-2" />
-                          <p>Voice input is not supported by your browser.</p>
-                      </div>
-                  )}
-              </div>
-            </div>
+    <div className="flex flex-col h-full">
+      <div className="flex-1 space-y-6">
+        <div className="flex flex-col space-y-1.5">
+            <h1 className="text-2xl font-semibold leading-none tracking-tight">Import Requirement</h1>
+            <p className="text-sm text-muted-foreground">
+              Upload your software requirements document, type them directly, or use your voice. Our AI
+              will analyze it for completeness and compliance.
+            </p>
         </div>
-
-      ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
-        
-        {uploadedFiles.length > 0 && (
-          <div className="grid gap-4 grid-cols-1">
-            {uploadedFiles.map((uploadedFile, index) => (
-              <FileProgress key={index} file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
-            ))}
+        <div className="space-y-6">
+        {isClient ? (
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+              <div className='md:col-span-2 flex flex-col gap-4'>
+                  <FileUpload onFilesUpload={handleFilesUpload} />
+              </div>
+              <div className='md:col-span-1 flex flex-col gap-6'>
+                <div className={cn(
+                    'relative flex w-full h-full flex-col items-stretch justify-start p-6 rounded-xl transition-colors',
+                    'bg-card/50 border-2 border-dashed border-border/30'
+                )}>
+                    <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2'>
+                        <Type className='h-4 w-4' />
+                        <span>Type your requirements</span>
+                    </div>
+                    <Textarea 
+                        placeholder="e.g., The system must allow users to log in with their email and password."
+                        className='min-h-[100px] flex-grow bg-transparent'
+                        value={manualText}
+                        onChange={(e) => setManualText(e.target.value)}
+                    />
+                </div>
+                <div className={cn(
+                    'relative flex w-full h-full flex-col items-center justify-center p-10 rounded-xl transition-colors',
+                    'bg-card/50 border-2 border-dashed border-border/30'
+                )}>
+                    {browserSupportsSpeechRecognition ? (
+                        <div className="flex flex-col items-center gap-2">
+                            <button
+                                onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
+                                className={cn(
+                                    "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
+                                    "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                                )}
+                                >
+                                {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
+                                <Mic className="h-10 w-10 text-primary-foreground" />
+                            </button>
+                            <p className="text-sm text-muted-foreground mt-2 text-center">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
+                        </div>
+                    ) : (
+                        <div className="text-center text-muted-foreground">
+                            <Mic className="h-10 w-10 mx-auto mb-2" />
+                            <p>Voice input is not supported by your browser.</p>
+                        </div>
+                    )}
+                </div>
+              </div>
           </div>
-        )}
-        
-        <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || !allFilesUploaded} className="w-full">
-          {isPending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Analyzing...
-            </>
-          ) : (
-            'Analyze & Continue'
+
+        ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
+          
+          {uploadedFiles.length > 0 && (
+            <div className="grid gap-4 grid-cols-1">
+              {uploadedFiles.map((uploadedFile, index) => (
+                <FileProgress key={index} file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
+              ))}
+            </div>
           )}
-        </Button>
+        </div>
+      </div>
+      <div className="pb-5">
+        <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || !allFilesUploaded} className="w-full">
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Analyzing...
+              </>
+            ) : (
+              'Analyze & Continue'
+            )}
+          </Button>
       </div>
     </div>
   );
