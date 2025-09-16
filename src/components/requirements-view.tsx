@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2, Mic, UploadCloud, X, File as FileIcon, Type } from 'lucide-react';
+import { Loader2, Mic, UploadCloud, X, File as FileIcon, Type, Square, Trash2, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { runValidation, runComplianceCheck } from '@/app/actions';
 import { useDropzone } from 'react-dropzone';
@@ -112,6 +112,10 @@ export default function RequirementsView({
   const [isPending, startTransition] = useTransition();
   const [manualText, setManualText] = useState('');
   const [isClient, setIsClient] = useState(false);
+  const [recordedAudio, setRecordedAudio] = useState<{url: string, transcript: string} | null>(null);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const audioRef = React.useRef<HTMLAudioElement>(null);
+  
   const { toast } = useToast();
   const {
       transcript,
@@ -140,13 +144,63 @@ export default function RequirementsView({
         setUploadedFiles(prev => prev.filter(f => f.file.name !== fileName));
       };
 
-      useEffect(() => {
-        if(transcript && !listening) {
-            const speechFile = new File([transcript], `speech-recognition-${new Date().toISOString()}.txt`, { type: "text/plain" });
+      const startRecording = async () => {
+        if (mediaRecorder) return;
+        resetTranscript();
+        setRecordedAudio(null);
+        SpeechRecognition.startListening({ continuous: true });
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const recorder = new MediaRecorder(stream);
+            setMediaRecorder(recorder);
+            const chunks: Blob[] = [];
+            recorder.ondataavailable = (e) => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/webm' });
+                const url = URL.createObjectURL(blob);
+                setRecordedAudio({ url, transcript });
+                stream.getTracks().forEach(track => track.stop());
+            };
+            recorder.start();
+        } catch (error) {
+            console.error("Error starting recording:", error);
+            toast({ title: 'Recording Error', description: 'Could not start recording. Please check permissions.', variant: 'destructive' });
+            SpeechRecognition.stopListening();
+        }
+    };
+
+    const stopRecording = () => {
+        if (listening) {
+            SpeechRecognition.stopListening();
+            mediaRecorder?.stop();
+            setMediaRecorder(null);
+        }
+    };
+
+    const cancelRecording = () => {
+        if (listening) {
+            SpeechRecognition.abortListening();
+            mediaRecorder?.stop(); // Stop will trigger onstop, but transcript will be empty
+            setMediaRecorder(null);
+            resetTranscript();
+            setRecordedAudio(null);
+        }
+    };
+
+    const addRecording = () => {
+        if (recordedAudio) {
+            const speechFile = new File([recordedAudio.transcript], `speech-recognition-${new Date().toISOString()}.txt`, { type: "text/plain" });
             handleFilesUpload([speechFile], 'speech');
+            setRecordedAudio(null);
             resetTranscript();
         }
-    }, [transcript, listening, resetTranscript])
+    };
+
+    const discardRecording = () => {
+        setRecordedAudio(null);
+        resetTranscript();
+    };
 
       useEffect(() => {
         uploadedFiles.forEach((uploadedFile, index) => {
@@ -277,24 +331,44 @@ export default function RequirementsView({
                     'relative flex w-full h-full flex-col items-center justify-center p-10 rounded-xl transition-colors',
                     'bg-card/50 border-2 border-dashed border-border/30'
                 )}>
-                    {browserSupportsSpeechRecognition ? (
+                    {!browserSupportsSpeechRecognition ? (
+                         <div className="text-center text-muted-foreground">
+                            <Mic className="h-10 w-10 mx-auto mb-2" />
+                            <p>Voice input is not supported by your browser.</p>
+                        </div>
+                    ) : listening ? (
+                        <div className="flex flex-col items-center gap-4 w-full">
+                           <div className="flex items-center gap-4">
+                                <button onClick={stopRecording} className="relative flex items-center justify-center w-16 h-16 rounded-full transition-all duration-300 focus:outline-none bg-red-500 shadow-[0_0_20px_-5px_hsl(0,100%,50%)]">
+                                    <Square className="h-6 w-6 text-white" />
+                                </button>
+                                <button onClick={cancelRecording} className="relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 focus:outline-none bg-muted hover:bg-muted/80">
+                                    <X className="h-5 w-5" />
+                                </button>
+                           </div>
+                           <p className="text-sm text-muted-foreground mt-2 text-center h-10">{transcript || 'Listening...'}</p>
+                        </div>
+                    ) : recordedAudio ? (
+                        <div className="flex flex-col items-center gap-4 w-full">
+                            <p className="font-semibold">Review Recording</p>
+                            <audio ref={audioRef} src={recordedAudio.url} controls className="w-full" />
+                            <div className="flex gap-4">
+                                <Button onClick={addRecording}>Add</Button>
+                                <Button variant="outline" onClick={discardRecording}>Discard</Button>
+                            </div>
+                        </div>
+                    ) : (
                         <div className="flex flex-col items-center gap-2">
                             <button
-                                onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
+                                onClick={startRecording}
                                 className={cn(
                                     "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
                                     "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
                                 )}
                                 >
-                                {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
                                 <Mic className="h-10 w-10 text-primary-foreground" />
                             </button>
-                            <p className="text-sm text-muted-foreground mt-2 text-center">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
-                        </div>
-                    ) : (
-                        <div className="text-center text-muted-foreground">
-                            <Mic className="h-10 w-10 mx-auto mb-2" />
-                            <p>Voice input is not supported by your browser.</p>
+                            <p className="text-sm text-muted-foreground mt-2 text-center">Use your voice</p>
                         </div>
                     )}
                 </div>
@@ -327,3 +401,5 @@ export default function RequirementsView({
     </div>
   );
 }
+
+    
