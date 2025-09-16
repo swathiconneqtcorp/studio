@@ -290,7 +290,7 @@ export default function DashboardPage() {
                       dataKey="Clinical Trial App.pending"
                       name="Clinical App: Pending"
                       stackId="a"
-                      fill="#FFF026"
+                      fill="#f97316"
                       radius={[4, 4, 0, 0]}
                     />
                      <Bar
@@ -310,7 +310,7 @@ export default function DashboardPage() {
                       dataKey="Patient Portal.pending"
                       name="Patient Portal: Pending"
                       stackId="b"
-                      fill="#FFF026"
+                      fill="#f97316"
                       radius={[4, 4, 0, 0]}
                     />
                   </RechartsBarChart>
@@ -407,5 +407,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
