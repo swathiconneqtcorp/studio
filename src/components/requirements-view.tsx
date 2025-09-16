@@ -49,7 +49,7 @@ function FileUpload({ onFilesUpload }: { onFilesUpload: (files: File[], source: 
         <div
             {...getRootProps()}
             className={cn(
-                'relative flex w-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
+                'relative flex w-full h-full flex-col items-center justify-center p-10 rounded-xl cursor-pointer transition-colors',
                 'bg-card/50 border-2 border-dashed border-border/30',
                  isDragActive ? 'border-primary bg-primary/10' : 'hover:border-primary/50 hover:bg-primary/5'
             )}
@@ -257,8 +257,8 @@ export default function RequirementsView({
             <div className='md:col-span-1 flex flex-col gap-4'>
                 <FileUpload onFilesUpload={handleFilesUpload} />
             </div>
-            <div className='md:col-span-2 flex flex-col gap-4'>
-                <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+            <div className='md:col-span-1 flex flex-col gap-4'>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2'>
                     <Type className='h-4 w-4' />
                     <span>Type your requirements</span>
                 </div>
@@ -268,24 +268,26 @@ export default function RequirementsView({
                     value={manualText}
                     onChange={(e) => setManualText(e.target.value)}
                  />
-                 {browserSupportsSpeechRecognition && (
+            </div>
+            <div className='md:col-span-1 flex flex-col gap-4 justify-center items-center'>
+                 {browserSupportsSpeechRecognition ? (
                     <div className="flex flex-col items-center gap-2">
-                        <div className="flex items-center w-full">
-                            <div className="flex-grow border-t border-border"></div>
-                            <span className="flex-shrink mx-4 text-muted-foreground text-xs">OR</span>
-                            <div className="flex-grow border-t border-border"></div>
-                        </div>
                         <button
                             onClick={listening ? () => SpeechRecognition.stopListening() : () => SpeechRecognition.startListening({ continuous: true })}
                             className={cn(
-                                "relative flex items-center justify-center w-16 h-16 rounded-full transition-all duration-300 focus:outline-none",
+                                "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
                                 "bg-primary shadow-[0_0_40px_-10px_hsl(var(--primary))]"
                             )}
                             >
                             {listening && <div className="absolute inset-0 rounded-full bg-transparent border-2 border-primary-foreground/50 pulse-ring"></div>}
-                            <Mic className="h-6 w-6 text-primary-foreground" />
+                            <Mic className="h-10 w-10 text-primary-foreground" />
                         </button>
-                        <p className="text-sm text-muted-foreground mt-1">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
+                        <p className="text-sm text-muted-foreground mt-2">{listening ? 'Recording... click to stop' : 'Use your voice'}</p>
+                    </div>
+                ) : (
+                    <div className="text-center text-muted-foreground">
+                        <Mic className="h-10 w-10 mx-auto mb-2" />
+                        <p>Voice input is not supported by your browser.</p>
                     </div>
                 )}
             </div>
