@@ -11,16 +11,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Loader2, Mic, UploadCloud } from 'lucide-react';
+import { Loader2, Mic, UploadCloud, X, File as FileIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { runValidation, runComplianceCheck } from '@/app/actions';
 import { useDropzone } from 'react-dropzone';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { cn } from '@/lib/utils';
-
+import { Progress } from '@/components/ui/progress';
 
 import type { ValidationResult, ComplianceResult } from '@/lib/types';
-import FileUploadProgress from './file-upload-progress';
 
 type RequirementsViewProps = {
   requirementsText: string;
@@ -28,49 +27,34 @@ type RequirementsViewProps = {
   onAnalysisComplete: (validation: ValidationResult, compliance: ComplianceResult, requirements: string) => void;
 };
 
-const complianceOptions = [
-  { id: 'FDA', label: 'FDA' },
-  { id: 'GDPR', label: 'GDPR' },
-  { id: 'ISO', label: 'ISO 13485' },
-  { id: 'HIPAA', label: 'HIPAA' },
-];
+type UploadedFile = {
+    file: File;
+    progress: number;
+    source: 'upload' | 'speech';
+    content: string;
+};
 
-function FileUpload({ onFileUpload, transcript, isRecording, startRecording, stopRecording, onFileSelect, isUploading, uploadProgress, file, onCancelUpload }: any) {
+
+function FileUpload({ onFilesUpload, transcript, isRecording, startRecording, stopRecording }: any) {
     const {
         browserSupportsSpeechRecognition
     } = useSpeechRecognition();
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        const file = acceptedFiles[0];
-        if (file) {
-            onFileSelect(file);
-            const reader = new FileReader();
-            reader.onload = () => {
-                const text = reader.result as string;
-                onFileUpload(text);
-            };
-            reader.readAsText(file);
+        if (acceptedFiles.length > 0) {
+            onFilesUpload(acceptedFiles, 'upload');
         }
-    }, [onFileSelect, onFileUpload]);
+    }, [onFilesUpload]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: {'text/plain': ['.txt', '.md'], 'application/pdf': ['.pdf'], 'application/msword': ['.doc', '.docx']} });
     
-    React.useEffect(() => {
-        if(transcript) {
-            onFileUpload(transcript)
+    useEffect(() => {
+        if(transcript && !isRecording) {
+            const speechFile = new File([transcript], `speech-recognition-${new Date().toISOString()}.txt`, { type: "text/plain" });
+            onFilesUpload([speechFile], 'speech');
         }
-    }, [transcript, onFileUpload])
+    }, [transcript, isRecording, onFilesUpload])
 
-    if (isUploading && file) {
-      return (
-        <FileUploadProgress
-          fileName={file.name}
-          fileSize={`${(file.size / 1024 / 1024).toFixed(2)}MB`}
-          progress={uploadProgress}
-          onCancel={onCancelUpload}
-        />
-      );
-    }
 
     return (
         <div className="flex flex-col items-center gap-6">
@@ -89,7 +73,7 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
                         <p className="mt-4 text-center text-foreground">
                             {isDragActive
                                 ? 'Drop the files here ...'
-                                : "Drag 'n' drop a requirements file here, or click to select"}
+                                : "Drag 'n' drop requirement files here, or click to select"}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">TXT, PDF, DOC, DOCX</p>
                     </div>
@@ -121,6 +105,41 @@ function FileUpload({ onFileUpload, transcript, isRecording, startRecording, sto
       );
 }
 
+const FileProgress: React.FC<{ file: UploadedFile, onCancel: () => void }> = ({ file, onCancel }) => {
+  return (
+    <Card className="bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border-border/30">
+      <CardContent className="p-4 relative">
+        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={onCancel}>
+          <X className="h-4 w-4" />
+        </Button>
+        <div className="flex items-center gap-4">
+          <FileIcon className="w-10 h-10 text-primary" strokeWidth={1.5} />
+          <div className="flex-1 overflow-hidden">
+            <p className="font-semibold truncate">{file.file.name}</p>
+            <p className="text-sm text-muted-foreground">{`${(file.file.size / 1024).toFixed(2)}KB`}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center gap-2 text-sm">
+            {file.progress < 100 ? (
+                <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Uploading...</span>
+                </>
+            ) : (
+                <span>Ready</span>
+            )}
+            <span className="ml-auto font-semibold">{Math.round(file.progress)}%</span>
+          </div>
+          <Progress value={file.progress} className="h-2" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+
 export default function RequirementsView({
   requirementsText,
   setRequirementsText,
@@ -136,52 +155,86 @@ export default function RequirementsView({
       resetTranscript,
       browserSupportsSpeechRecognition
     } = useSpeechRecognition();
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [uploadCancelled, setUploadCancelled] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const handleFileSelect = (file: File) => {
-    setUploadedFile(file);
-    setIsUploading(true);
-    setUploadProgress(0);
-    setUploadCancelled(false);
-  };
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   
-  const handleCancelUpload = () => {
-    setUploadCancelled(true);
-    setIsUploading(false);
-    setUploadedFile(null);
-    setRequirementsText('');
-  };
+    useEffect(() => {
+        setIsClient(true);
+      }, []);
+    
+      const handleFilesUpload = (files: File[], source: 'upload' | 'speech') => {
+        const newFiles: UploadedFile[] = files.map(file => ({
+            file,
+            progress: 0,
+            source,
+            content: ''
+        }));
+        setUploadedFiles(prev => [...prev, ...newFiles]);
+      };
+    
+      const handleCancelUpload = (fileName: string) => {
+        setUploadedFiles(prev => prev.filter(f => f.file.name !== fileName));
+      };
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isUploading && uploadProgress < 100 && !uploadCancelled) {
-      timer = setInterval(() => {
-        setUploadProgress(prev => {
-            const next = prev + 10;
-            if (next >= 100) {
-                clearInterval(timer);
-                setIsUploading(false);
-                return 100;
+      useEffect(() => {
+        uploadedFiles.forEach((uploadedFile, index) => {
+          if (uploadedFile.progress < 100 && !uploadedFile.content) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target?.result as string;
+                setUploadedFiles(prev => {
+                    const newFiles = [...prev];
+                    newFiles[index].content = text;
+                    return newFiles;
+                });
+            };
+            reader.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    const progress = (e.loaded / e.total) * 100;
+                    setUploadedFiles(prev => {
+                        const newFiles = [...prev];
+                        if (newFiles[index]) {
+                            newFiles[index].progress = progress;
+                        }
+                        return newFiles;
+                    });
+                }
+            };
+            reader.onloadend = () => {
+                setUploadedFiles(prev => {
+                    const newFiles = [...prev];
+                    if (newFiles[index]) {
+                        newFiles[index].progress = 100;
+                    }
+                    return newFiles;
+                });
+            };
+            if(uploadedFile.source === 'upload') {
+                reader.readAsText(uploadedFile.file);
+            } else {
+                // For speech, content is already there
+                const content = uploadedFile.file.text().then(text => {
+                    setUploadedFiles(prev => {
+                        const newFiles = [...prev];
+                        newFiles[index].content = text;
+                        newFiles[index].progress = 100;
+                        return newFiles;
+                    });
+                });
             }
-            return next;
+          }
         });
-      }, 200);
-    }
-    return () => clearInterval(timer);
-  }, [isUploading, uploadProgress, uploadCancelled]);
+
+        const allContent = uploadedFiles.map(f => f.content).join('\n\n');
+        setRequirementsText(allContent);
+    }, [uploadedFiles, setRequirementsText]);
+
 
   const handleAnalyze = () => {
     startTransition(async () => {
       try {
         const reqText = requirementsText || "Login screen";
-        const standards = selectedStandards.length > 0 ? selectedStandards.join(', ') : 'FDA';
+        const standards = 'FDA, GDPR, ISO 13485, HIPAA';
 
         const [validation, compliance] = await Promise.all([
           runValidation(reqText),
@@ -214,6 +267,8 @@ export default function RequirementsView({
     );
   };
 
+  const allFilesUploaded = uploadedFiles.every(f => f.progress === 100);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col space-y-1.5">
@@ -225,20 +280,23 @@ export default function RequirementsView({
       </div>
       <div className="space-y-6">
       {isClient ? <FileUpload
-          onFileUpload={setRequirementsText}
+          onFilesUpload={handleFilesUpload}
           transcript={transcript}
           isRecording={listening}
           startRecording={() => SpeechRecognition.startListening({ continuous: true })}
           stopRecording={SpeechRecognition.stopListening}
           browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-          onFileSelect={handleFileSelect}
-          isUploading={isUploading}
-          uploadProgress={uploadProgress}
-          file={uploadedFile}
-          onCancelUpload={handleCancelUpload}
         /> : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
         
-        <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || isUploading} className="w-full">
+        {uploadedFiles.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {uploadedFiles.map((uploadedFile, index) => (
+              <FileProgress key={index} file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
+            ))}
+          </div>
+        )}
+        
+        <Button onClick={handleAnalyze} disabled={isPending || !requirementsText || !allFilesUploaded} className="w-full">
           {isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -252,3 +310,5 @@ export default function RequirementsView({
     </div>
   );
 }
+
+    
