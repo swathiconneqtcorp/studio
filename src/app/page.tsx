@@ -84,36 +84,10 @@ const kpiData = [
 ];
 
 const barChartData = [
-  {
-    name: 'Jan',
-    'Clinical Trial App': { passed: 40, failed: 5, pending: 10 },
-    'Patient Portal': { passed: 30, failed: 3, pending: 8 },
-  },
-  {
-    name: 'Feb',
-    'Clinical Trial App': { passed: 45, failed: 8, pending: 12 },
-    'Patient Portal': { passed: 35, failed: 5, pending: 10 },
-  },
-  {
-    name: 'Mar',
-    'Clinical Trial App': { passed: 50, failed: 10, pending: 15 },
-    'Patient Portal': { passed: 40, failed: 7, pending: 12 },
-  },
-  {
-    name: 'Apr',
-    'Clinical Trial App': { passed: 55, failed: 7, pending: 13 },
-    'Patient Portal': { passed: 45, failed: 6, pending: 11 },
-  },
-  {
-    name: 'May',
-    'Clinical Trial App': { passed: 60, failed: 9, pending: 18 },
-    'Patient Portal': { passed: 50, failed: 8, pending: 14 },
-  },
-  {
-    name: 'Jun',
-    'Clinical Trial App': { passed: 65, failed: 12, pending: 20 },
-    'Patient Portal': { passed: 55, failed: 10, pending: 16 },
-  },
+    { name: 'Clinical Trial App', passed: 315, failed: 51, pending: 88 },
+    { name: 'Patient Portal', passed: 265, failed: 39, pending: 71 },
+    { name: 'EHR System', passed: 450, failed: 25, pending: 40 },
+    { name: 'Telemedicine', passed: 180, failed: 15, pending: 30 },
 ];
 
 const defectData = [
@@ -246,7 +220,7 @@ export default function DashboardPage() {
                 App-wise Testcase Status
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Monthly breakdown of test cases by status for each application.
+                Total test cases by status for each application.
               </p>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -274,42 +248,22 @@ export default function DashboardPage() {
                     />
                     <Legend wrapperStyle={{fontSize: "12px"}}/>
                     <Bar
-                      dataKey="Clinical Trial App.passed"
-                      name="Clinical App: Passed"
+                      dataKey="passed"
+                      name="Passed"
                       stackId="a"
                       fill="#8BEA70"
                       radius={[0, 0, 0, 0]}
                     />
                     <Bar
-                      dataKey="Clinical Trial App.failed"
-                      name="Clinical App: Failed"
+                      dataKey="failed"
+                      name="Failed"
                       stackId="a"
                       fill="#B72B49"
                     />
                      <Bar
-                      dataKey="Clinical Trial App.pending"
-                      name="Clinical App: Pending"
+                      dataKey="pending"
+                      name="Pending"
                       stackId="a"
-                      fill="#f97316"
-                      radius={[4, 4, 0, 0]}
-                    />
-                     <Bar
-                      dataKey="Patient Portal.passed"
-                      name="Patient Portal: Passed"
-                      stackId="b"
-                      fill="#8BEA70"
-                      radius={[0, 0, 0, 0]}
-                    />
-                    <Bar
-                      dataKey="Patient Portal.failed"
-                      name="Patient Portal: Failed"
-                      stackId="b"
-                      fill="#B72B49"
-                    />
-                     <Bar
-                      dataKey="Patient Portal.pending"
-                      name="Patient Portal: Pending"
-                      stackId="b"
                       fill="#f97316"
                       radius={[4, 4, 0, 0]}
                     />
@@ -407,3 +361,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
