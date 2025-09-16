@@ -72,35 +72,34 @@ function FileUpload({ onFilesUpload }: { onFilesUpload: (files: File[], source: 
 
 const FileProgress: React.FC<{ file: UploadedFile, onCancel: () => void }> = ({ file, onCancel }) => {
   return (
-    <Card className="bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border-border/30 w-full">
-      <CardContent className="p-4 relative">
-        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6" onClick={onCancel}>
-          <X className="h-4 w-4" />
+    <div className="bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border border-border/30 rounded-xl p-4 w-full relative">
+        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-6 w-6 text-muted-foreground hover:text-foreground" onClick={onCancel}>
+            <X className="h-4 w-4" />
         </Button>
         <div className="flex items-center gap-4">
-          <FileIcon className="w-10 h-10 text-primary" strokeWidth={1.5} />
-          <div className="flex-1 overflow-hidden">
-            <p className="font-semibold truncate">{file.file.name}</p>
-            <p className="text-sm text-muted-foreground">{`${(file.file.size / 1024).toFixed(2)}KB`}</p>
-          </div>
+            <div className="p-3 bg-primary/10 rounded-lg">
+                <FileIcon className="w-8 h-8 text-primary" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 overflow-hidden">
+                <p className="font-semibold truncate">{file.file.name}</p>
+                <p className="text-sm text-muted-foreground">{`${(file.file.size / 1024).toFixed(2)} KB`}</p>
+            </div>
         </div>
-
         <div className="mt-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm">
-            {file.progress < 100 ? (
-                <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Uploading...</span>
-                </>
-            ) : (
-                <span>Ready</span>
-            )}
-            <span className="ml-auto font-semibold">{Math.round(file.progress)}%</span>
-          </div>
-          <Progress value={file.progress} className="h-2" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                {file.progress < 100 ? (
+                    <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Uploading...</span>
+                    </>
+                ) : (
+                    <span>Ready</span>
+                )}
+                <span className="ml-auto font-semibold text-foreground">{Math.round(file.progress)}%</span>
+            </div>
+            <Progress value={file.progress} className="h-2" />
         </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 
