@@ -11,44 +11,8 @@ import { runParseScenarios } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
-const dummyScenarios: Scenario[] = [
-    {
-        id: 'REQ-001',
-        reqId: 'REQ-001',
-        title: 'User Login with Email and Password',
-        description: 'As a user, I should be able to log in to the application using my registered email address and password to access my personalized dashboard.',
-        priority: 'High',
-        requirementType: 'Functional',
-        requirementSource: 'SRS Document v1.2',
-        testCases: [],
-        areTestsGenerating: false,
-    },
-    {
-        id: 'REQ-002',
-        reqId: 'REQ-002',
-        title: 'Password Reset Functionality',
-        description: 'Users who have forgotten their password should be able to reset it through a secure link sent to their registered email address.',
-        priority: 'High',
-        requirementType: 'Functional',
-        requirementSource: 'SRS Document v1.2',
-        testCases: [],
-        areTestsGenerating: false,
-    },
-    {
-        id: 'REQ-003',
-        reqId: 'REQ-003',
-        title: 'Dashboard Data Loading Performance',
-        description: 'The main dashboard must load all user-specific data within 3 seconds of the user logging in to ensure a good user experience.',
-        priority: 'Medium',
-        requirementType: 'Non-Functional',
-        requirementSource: 'Performance Goals Q3',
-        testCases: [],
-        areTestsGenerating: false,
-    }
-];
-
 export default function ScenariosPage() {
-  const [scenarios, setScenarios] = useState<Scenario[]>(dummyScenarios);
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [analysis, setAnalysis] = useState<{
     validation: ValidationResult;
     compliance: ComplianceResult;
