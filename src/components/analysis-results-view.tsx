@@ -11,7 +11,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, FileWarning, Lightbulb, Info, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
+import { AlertCircle, FileWarning, Lightbulb, Info, ArrowRight, RefreshCw, AlertTriangle, Loader2 } from 'lucide-react';
 import type { ValidationResult, ComplianceResult } from '@/lib/types';
 import Image from 'next/image';
 
@@ -19,6 +19,7 @@ type AnalysisResultsViewProps = {
   validationResult: ValidationResult;
   complianceResult: ComplianceResult;
   onCreateScenarios: () => void;
+  isParsing: boolean;
 };
 
 const SuggestionCard = ({
@@ -84,6 +85,7 @@ export default function AnalysisResultsView({
   validationResult,
   complianceResult,
   onCreateScenarios,
+  isParsing,
 }: AnalysisResultsViewProps) {
   const missingElements =
     validationResult?.completenessValidation?.missingElements || [];
@@ -177,8 +179,17 @@ export default function AnalysisResultsView({
           <RefreshCw className="mr-2 h-4 w-4" />
           Update Document & Re-validate
         </Button>
-        <Button onClick={onCreateScenarios} className="bg-primary hover:bg-primary/90">
-          Proceed with warning <ArrowRight className="ml-2 h-4 w-4" />
+        <Button onClick={onCreateScenarios} className="bg-primary hover:bg-primary/90" disabled={isParsing}>
+          {isParsing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Proceeding...
+              </>
+            ) : (
+              <>
+                Proceed with warning <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            )}
         </Button>
       </div>
     </div>
