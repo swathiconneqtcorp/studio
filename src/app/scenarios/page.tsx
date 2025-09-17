@@ -27,7 +27,7 @@ export default function ScenariosPage() {
     if (storedAnalysis) {
       const parsedAnalysis = JSON.parse(storedAnalysis);
       setAnalysis(parsedAnalysis);
-      setView('analysis');
+      handleCreateScenarios(parsedAnalysis.requirements);
       // localStorage.removeItem('requirementsAnalysis');
     }
   }, []);
@@ -103,14 +103,7 @@ export default function ScenariosPage() {
     <>
       <Header title="Scenarios & Test Cases" />
       <main className="flex-1 p-4 lg:p-6">
-        {view === 'analysis' && analysis ? (
-          <AnalysisResultsView 
-            validationResult={analysis.validation}
-            complianceResult={analysis.compliance}
-            onCreateScenarios={() => handleCreateScenarios(analysis.requirements)}
-            isParsing={isParsing}
-          />
-        ) : isParsing ? (
+        {isParsing ? (
            <div className="flex justify-center items-center h-full">
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-12 w-12 animate-spin text-primary" />
