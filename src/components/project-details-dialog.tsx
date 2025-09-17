@@ -109,7 +109,7 @@ export default function ProjectDetailsDialog({
                 id="appName"
                 value={details.appName}
                 onChange={(e) => setDetails({...details, appName: e.target.value})}
-                className="bg-gray-100 border-gray-200 text-black transition-colors hover:border-primary/50"
+                className="bg-gray-100 text-black border-0 transition-all hover:shadow-md hover:-translate-y-px"
               />
             </div>
             <div className="grid gap-2">
@@ -120,7 +120,7 @@ export default function ProjectDetailsDialog({
                 id="objective"
                 value={details.objective}
                 onChange={(e) => setDetails({...details, objective: e.target.value})}
-                className="bg-gray-100 border-gray-200 text-black transition-colors hover:border-primary/50"
+                className="bg-gray-100 text-black border-0 transition-all hover:shadow-md hover:-translate-y-px"
                 rows={2}
               />
             </div>
@@ -133,7 +133,7 @@ export default function ProjectDetailsDialog({
                   id="features"
                   placeholder="Type a feature and press Enter"
                   onKeyDown={handleFeaturesKeyDown}
-                  className="mb-2 bg-gray-100 border-gray-200 text-black transition-colors hover:border-primary/50"
+                  className="mb-2 bg-gray-100 text-black border-0 transition-all hover:shadow-md hover:-translate-y-px"
                 />
                 <div className="flex flex-wrap gap-2">
                     {details.features.map((feature, index) => (
@@ -156,7 +156,7 @@ export default function ProjectDetailsDialog({
                   id="techStack"
                   placeholder="Type a technology and press Enter"
                   onKeyDown={handleTechStackKeyDown}
-                  className="mb-2 bg-gray-100 border-gray-200 text-black transition-colors hover:border-primary/50"
+                  className="mb-2 bg-gray-100 text-black border-0 transition-all hover:shadow-md hover:-translate-y-px"
                 />
                 <div className="flex flex-wrap gap-2">
                     {details.techStack.map((tech, index) => (
