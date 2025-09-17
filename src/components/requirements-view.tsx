@@ -285,23 +285,24 @@ export default function RequirementsView({
                 variant: 'destructive',
             });
             // Fallback to old behavior if parsing fails
-            handleAnalyze(parsedDetails || { appName: '', objective: '', features: [], techStack: [] });
+            handleAnalyze(null);
         }
     });
   }
 
-  const handleAnalyze = (projectDetails: ProjectDetails) => {
+  const handleAnalyze = (projectDetails: ProjectDetails | null) => {
     setIsProjectDetailsDialogOpen(false);
     startTransition(async () => {
       try {
         const reqText = requirementsText || "Login screen";
         const standards = 'FDA, GDPR, ISO 13485, HIPAA';
 
-        // You can use projectDetails here if needed for subsequent steps
-        console.log('Confirmed Project Details:', projectDetails);
+        if (projectDetails) {
+            console.log('Confirmed Project Details:', projectDetails);
+        }
 
         const [validation, compliance] = await Promise.all([
-          runValidation({requirements: reqText}),
+          runValidation(reqText),
           runComplianceCheck(
             reqText,
             standards
@@ -407,9 +408,9 @@ export default function RequirementsView({
         ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
           
           {uploadedFiles.length > 0 && (
-            <div className="grid gap-4 grid-cols-1">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {uploadedFiles.map((uploadedFile, index) => (
-                <div key={index} className="lg:col-span-3">
+                <div key={index} className="lg:col-span-1">
                     <FileProgress file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
                 </div>
               ))}
