@@ -61,28 +61,20 @@ import {
 
 const kpiData = [
   {
-    title: 'Total User Stories',
-    value: '128',
-    icon: ClipboardList,
-    change: '+12.5%',
-    changeType: 'increase',
-    vsLastMonth: '114',
-  },
-  {
-    title: 'Testcases Passed',
-    value: '2,345',
-    icon: FlaskConical,
-    change: '+5.2%',
-    changeType: 'increase',
-    vsLastMonth: '2,229',
-  },
-  {
     title: 'Total Apps Used',
     value: '4',
     icon: Zap,
     change: '0%',
     changeType: 'neutral',
     vsLastMonth: '4',
+  },
+  {
+    title: 'Total User Stories',
+    value: '128',
+    icon: ClipboardList,
+    change: '+12.5%',
+    changeType: 'increase',
+    vsLastMonth: '114',
   },
   {
     title: 'Active Tests',
@@ -92,13 +84,21 @@ const kpiData = [
     changeType: 'decrease',
     vsLastMonth: '8',
   },
+  {
+    title: 'Testcases Passed',
+    value: '2,345',
+    icon: FlaskConical,
+    change: '+5.2%',
+    changeType: 'increase',
+    vsLastMonth: '2,229',
+  }
 ];
 
 const barChartData = [
-    { name: 'Clinical Trial App', passed: 315, failed: 51, pending: 88 },
-    { name: 'Patient Portal', passed: 265, failed: 39, pending: 71 },
-    { name: 'EHR System', passed: 450, failed: 25, pending: 40 },
-    { name: 'Telemedicine', passed: 180, failed: 15, pending: 30 },
+  { name: 'Clinical Trial App', passed: 315, failed: 51, pending: 88 },
+  { name: 'Patient Portal', passed: 265, failed: 39, pending: 71 },
+  { name: 'EHR System', passed: 450, failed: 25, pending: 40 },
+  { name: 'Telemedicine', passed: 180, failed: 15, pending: 30 },
 ];
 
 const defectTrendData = [
@@ -181,7 +181,7 @@ const GlassCard = ({
   <div
     className={cn(
       'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm transition-all duration-300',
-      'shadow-[0_0_80px_0_var(--card-glow)]',
+      'shadow-[0_4px_30px_rgba(255,255,255,0.1)]',
       'hover:bg-gradient-to-br hover:from-[var(--card-hover-bg-start)] hover:to-[var(--card-hover-bg-end)]',
       'hover:shadow-[0_0_80px_0_var(--card-hover-glow)]',
       className
@@ -200,7 +200,7 @@ const GlassCard = ({
 
 export default function DashboardPage() {
   const [isClient, setIsClient] = useState(false);
-  
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -230,43 +230,43 @@ export default function DashboardPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {kpiData.map((kpi) => (
               <GlassCard key={kpi.title}>
-              <Card className="bg-transparent border-0 h-full">
-                <CardContent className="p-4 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <kpi.icon className="h-6 w-6 text-primary" />
+                <Card className="bg-transparent border-0 h-full">
+                  <CardContent className="p-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="p-2 rounded-lg bg-primary/10">
+                        <kpi.icon className="h-6 w-6 text-primary" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>{kpi.title}</span>
-                      <ChevronRight className="h-4 w-4" />
-                    </div>
-                    <div className="flex items-baseline gap-2">
-                      <p className="text-3xl font-bold">{kpi.value}</p>
-                      <p
-                        className={cn(
-                          'text-xs font-semibold flex items-center',
-                          kpi.changeType === 'increase' && 'text-green-500',
-                          kpi.changeType === 'decrease' && 'text-red-500',
-                          kpi.changeType === 'neutral' && 'text-muted-foreground'
-                        )}
-                      >
-                        {kpi.changeType === 'increase' && (
-                          <ArrowUp className="h-3 w-3 mr-1" />
-                        )}
-                        {kpi.changeType === 'decrease' && (
-                          <ArrowDown className="h-3 w-3 mr-1" />
-                        )}
-                        {kpi.change}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span>{kpi.title}</span>
+                        <ChevronRight className="h-4 w-4" />
+                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <p className="text-3xl font-bold">{kpi.value}</p>
+                        <p
+                          className={cn(
+                            'text-xs font-semibold flex items-center',
+                            kpi.changeType === 'increase' && 'text-green-500',
+                            kpi.changeType === 'decrease' && 'text-red-500',
+                            kpi.changeType === 'neutral' && 'text-muted-foreground'
+                          )}
+                        >
+                          {kpi.changeType === 'increase' && (
+                            <ArrowUp className="h-3 w-3 mr-1" />
+                          )}
+                          {kpi.changeType === 'decrease' && (
+                            <ArrowDown className="h-3 w-3 mr-1" />
+                          )}
+                          {kpi.change}
+                        </p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        vs last month: {kpi.vsLastMonth}
                       </p>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      vs last month: {kpi.vsLastMonth}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
               </GlassCard>
             ))}
           </div>
@@ -303,7 +303,7 @@ export default function DashboardPage() {
                         borderRadius: '0.5rem',
                       }}
                     />
-                    <Legend wrapperStyle={{fontSize: "12px"}}/>
+                    <Legend wrapperStyle={{ fontSize: "12px" }} />
                     <Bar
                       dataKey="passed"
                       name="Passed"
@@ -317,7 +317,7 @@ export default function DashboardPage() {
                       stackId="a"
                       fill="#B72B49"
                     />
-                     <Bar
+                    <Bar
                       dataKey="pending"
                       name="Pending"
                       stackId="a"
