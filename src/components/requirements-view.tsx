@@ -337,11 +337,11 @@ export default function RequirementsView({
         </div>
         <div className="space-y-6">
         {isClient ? (
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              <div className='md:col-span-2 flex flex-col gap-4'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+              <div className='lg:col-span-2 flex flex-col gap-4'>
                   <FileUpload onFilesUpload={handleFilesUpload} />
               </div>
-              <div className='md:col-span-1 flex flex-col gap-6'>
+              <div className='lg:col-span-1 flex flex-col gap-6'>
                 <div className={cn(
                     'relative flex w-full h-full flex-col items-stretch justify-start p-6 rounded-xl transition-colors',
                     'bg-card/50 border-2 border-dashed border-border/30'
@@ -392,7 +392,7 @@ export default function RequirementsView({
                                 onClick={startRecording}
                                 className={cn(
                                     "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                                    "bg-gradient-to-br from-primary via-accent to-violet-500 shadow-[0_0_40px_-10px_hsl(var(--primary))]"
+                                    "bg-gradient-to-br from-primary to-accent shadow-[0_0_40px_-10px_hsl(var(--mic-glow))]"
                                 )}
                                 >
                                 <Mic className="h-10 w-10 text-primary-foreground" />
@@ -409,7 +409,7 @@ export default function RequirementsView({
           {uploadedFiles.length > 0 && (
             <div className="grid gap-4 grid-cols-1">
               {uploadedFiles.map((uploadedFile, index) => (
-                <div key={index} className="md:col-span-3">
+                <div key={index} className="lg:col-span-3">
                     <FileProgress file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
                 </div>
               ))}
