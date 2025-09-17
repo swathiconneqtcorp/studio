@@ -181,9 +181,9 @@ const GlassCard = ({
   <div
     className={cn(
       'group rounded-xl bg-gradient-to-br from-[var(--card-bg-start)] to-[var(--card-bg-end)] backdrop-blur-sm transition-all duration-300',
-      'shadow-[0_8px_40px_rgba(255,255,255,0.2)]',
+      'shadow-[0_0_80px_0_var(--card-hover-glow)]',
       'hover:bg-gradient-to-br hover:from-[var(--card-hover-bg-start)] hover:to-[var(--card-hover-bg-end)]',
-      'hover:shadow-[0_0_80px_0_var(--card-hover-glow)]',
+      'hover:shadow-[0_8px_40px_rgba(255,255,255,0.2)]',
       className
     )}
   >
