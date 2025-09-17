@@ -285,7 +285,7 @@ export default function RequirementsView({
                 variant: 'destructive',
             });
             // Fallback to old behavior if parsing fails
-            handleAnalyze();
+            handleAnalyze(parsedDetails || { appName: '', objective: '', features: [], techStack: [] });
         }
     });
   }
@@ -368,15 +368,14 @@ export default function RequirementsView({
                         </div>
                     ) : listening ? (
                         <div className="flex flex-col items-center gap-4 w-full">
-                           <div className="flex items-center gap-4">
+                           <div className="relative">
                                 <button onClick={stopRecording} className="relative flex items-center justify-center w-16 h-16 rounded-full transition-all duration-300 focus:outline-none bg-red-500 shadow-[0_0_20px_-5px_hsl(0,100%,50%)]">
                                     <Square className="h-6 w-6 text-white" />
                                 </button>
-                                <button onClick={cancelRecording} className="relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 focus:outline-none bg-muted hover:bg-muted/80">
-                                    <X className="h-5 w-5" />
-                                </button>
+                                <div className="absolute inset-0 rounded-full border-2 border-primary pulse-ring"></div>
                            </div>
                            <p className="text-sm text-muted-foreground mt-2 text-center h-10">{transcript || 'Listening...'}</p>
+                           <button onClick={cancelRecording} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
                         </div>
                     ) : recordedAudio ? (
                         <div className="flex flex-col items-center gap-4 w-full">
@@ -393,7 +392,7 @@ export default function RequirementsView({
                                 onClick={startRecording}
                                 className={cn(
                                     "relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 focus:outline-none",
-                                    "bg-gradient-to-br from-blue-400 to-purple-500 shadow-[0_0_40px_-10px_#60a5fa]"
+                                    "bg-gradient-to-br from-primary via-accent to-violet-500 shadow-[0_0_40px_-10px_hsl(var(--primary))]"
                                 )}
                                 >
                                 <Mic className="h-10 w-10 text-primary-foreground" />
@@ -408,7 +407,7 @@ export default function RequirementsView({
         ) : <div className="h-64 w-full animate-pulse rounded-lg bg-muted flex items-center justify-center"><Loader2 className='h-8 w-8 animate-spin' /></div>}
           
           {uploadedFiles.length > 0 && (
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1">
               {uploadedFiles.map((uploadedFile, index) => (
                 <div key={index} className="md:col-span-3">
                     <FileProgress file={uploadedFile} onCancel={() => handleCancelUpload(uploadedFile.file.name)} />
