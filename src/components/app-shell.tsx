@@ -14,7 +14,7 @@ import {
   SidebarProvider,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons';
-import { FileText, LayoutGrid, TestTube } from 'lucide-react';
+import { FileText, LayoutGrid, TestTube, AppWindow } from 'lucide-react';
 import Link from 'next/link';
 
 const sidebarNavItems = [
@@ -35,6 +35,12 @@ const sidebarNavItems = [
     label: 'Scenarios',
     icon: TestTube,
     href: '/scenarios',
+  },
+  {
+    id: 'products',
+    label: 'Products',
+    icon: AppWindow,
+    href: '/products',
   },
 ];
 
